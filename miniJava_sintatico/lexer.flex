@@ -45,6 +45,8 @@ System.out.println { return Parser.PRINT; }
 length             { return Parser.LENGTH; }
 true               { return Parser.TRUE; }
 false              { return Parser.FALSE; }
+cmdo               { return Parser.STATEMENT; }
+expr               { return Parser.EXPRESSION; }
 
 {LETTER}({LETTER}|{DIGIT})* {return Parser.IDENTIFIER;}
 {DIGIT}+                    {return Parser.INTEGER_LITERAL;}

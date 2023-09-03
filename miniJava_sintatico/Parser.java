@@ -1,7 +1,8 @@
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Parser {
-
     private static final int BASE_TOKEN_NUM = 300;
 
     public static int CLASS = 300;
@@ -26,37 +27,57 @@ public class Parser {
 
     public static int IDENTIFIER = 319;
     public static int INTEGER_LITERAL = 320;
-    public static int EOF = 321;
 
-    public static int EQUALS = 322;
-    public static int AND = 323;
+    public static int EQUALS = 321;
+    public static int AND = 322;
 
-    // TODO: implementar nas próximas etapas do trabalho
-    public static int STATEMENT = 324;
-    public static int EXPRESSION = 325;
+    // TODO: to be implemented in project's next phase
+    public static int STATEMENT = 323;
+    public static int EXPRESSION = 324;
 
-    public static final String tokenList[] = {
-            "CLASS", "PUBLIC", "STATIC", "VOID", "MAIN", "RETURN", "STRING",
-            "EXTENDS", "NEW", "INT", "BOOLEAN", "IF", "ELSE", "WHILE", "THIS",
-            "PRINT", "LENGTH", "TRUE", "FALSE", "IDENTIFIER", "INTEGER_LITERAL",
-            "EOF", "EQUALS", "AND"
+    public static final Map<Integer, String> tokenNames = new HashMap<>() {
+        {
+            put(CLASS, "CLASS");
+            put(PUBLIC, "PUBLIC");
+            put(STATIC, "STATIC");
+            put(VOID, "VOID");
+            put(MAIN, "MAIN");
+            put(RETURN, "RETURN");
+            put(STRING, "STRING");
+            put(EXTENDS, "EXTENDS");
+            put(NEW, "NEW");
+            put(INT, "INT");
+            put(BOOLEAN, "BOOLEAN");
+            put(IF, "IF");
+            put(ELSE, "ELSE");
+            put(WHILE, "WHILE");
+            put(THIS, "THIS");
+            put(PRINT, "PRINT");
+            put(LENGTH, "LENGTH");
+            put(TRUE, "TRUE");
+            put(FALSE, "FALSE");
+            put(IDENTIFIER, "IDENTIFIER");
+            put(INTEGER_LITERAL, "INTEGER_LITERAL");
+            put(EQUALS, "EQUALS");
+            put(AND, "AND");
+            put(STATEMENT, "STATEMENT");
+            put(EXPRESSION, "EXPRESSION");
+        }
     };
 
-    /* referencia ao objeto Scanner gerado pelo JFLEX */
+
     private Yylex lexer;
-
-    public ParserVal yylval;
-
+//    public ParserVal yylval;
     private static int laToken;
+
     private boolean debug;
 
-    /* construtor da classe */
     public Parser(Reader r) {
         lexer = new Yylex(r, this);
     }
 
     /*
-     * 
+     *
      * Goal ::= MainClass ( ClassDeclaration )* <EOF>
      * MainClass ::= "class" Identifier "{" "public" "static" "void" "main" "("
      * "String" "[" "]" Identifier ")" "{" Statement "}" "}"
@@ -72,152 +93,165 @@ public class Parser {
      * | Identifier
      */
 
-    private void Goal() {
+    private void goal() {
         // MainClass ( ClassDeclaration )* <EOF>
-        MainClass();
+        printDebug("Entering goal");
+        mainClass();
         while (laToken == CLASS) {
-            ClassDeclaration();
+            classDeclaration();
         }
-        Verifica(EOF);
     }
 
-    private void MainClass() {
+    private void mainClass() {
         // "class" Identifier "{" "public" "static" "void" "main" "(" "String" "[" "]"
         // Identifier ")" "{" Statement "}" "}"
-        Verifica(CLASS);
-        Verifica(IDENTIFIER);
-        Verifica('{');
-        Verifica(PUBLIC);
-        Verifica(STATIC);
-        Verifica(VOID);
-        Verifica(MAIN);
-        Verifica('(');
-        Verifica(STRING);
-        Verifica('[');
-        Verifica(']');
-        Verifica(IDENTIFIER);
-        Verifica(')');
-        Verifica('{');
-        Statement();
-        Verifica('}');
-        Verifica('}');
+        printDebug("Entering main class");
+        verify(CLASS);
+        verify(IDENTIFIER);
+        verify('{');
+        verify(PUBLIC);
+        verify(STATIC);
+        verify(VOID);
+        verify(MAIN);
+        verify('(');
+        verify(STRING);
+        verify('[');
+        verify(']');
+        verify(IDENTIFIER);
+        verify(')');
+        verify('{');
+        statement();
+        verify('}');
+        verify('}');
     }
 
-    private void ClassDeclaration() {
+    private void classDeclaration() {
         // "class" Identifier ( "extends" Identifier )? "{" ( VarDeclaration )* (
         // MethodDeclaration )* "}"
-        Verifica(CLASS);
-        Verifica(IDENTIFIER);
+        printDebug("Entering class declaration");
+        verify(CLASS);
+        verify(IDENTIFIER);
         if (laToken == EXTENDS) {
-            Verifica(EXTENDS);
-            Verifica(IDENTIFIER);
+            verify(EXTENDS);
+            verify(IDENTIFIER);
         }
-        Verifica('{');
+        verify('{');
         while (laToken == INT || laToken == BOOLEAN || laToken == IDENTIFIER) {
-            VarDeclaration();
+            varDeclaration();
         }
         while (laToken == PUBLIC) {
-            MethodDeclaration();
+            methodDeclaration();
         }
-        Verifica('}');
+        verify('}');
     }
 
-    private void VarDeclaration() {
+    private void varDeclaration() {
         // Type Identifier ";"
-        Type();
-        Verifica(IDENTIFIER);
-        Verifica(';');
+        printDebug("Entering variable declaration");
+        type();
+        verify(IDENTIFIER);
+        verify(';');
     }
 
-    private void MethodDeclaration() {
+    private void methodDeclaration() {
         // "public" Type Identifier "(" ( Type Identifier ( "," Type Identifier )* )?
         // ")" "{" ( VarDeclaration )* ( Statement )* "return" Expression ";" "}"
-        Verifica(PUBLIC);
-        Type();
-        Verifica(IDENTIFIER);
-        Verifica('(');
+        printDebug("Entering method declaration");
+        verify(PUBLIC);
+        type();
+        verify(IDENTIFIER);
+        verify('(');
         if (laToken == INT || laToken == BOOLEAN || laToken == IDENTIFIER) {
-            Type();
-            Verifica(IDENTIFIER);
+            type();
+            verify(IDENTIFIER);
             while (laToken == ',') {
-                Verifica(',');
-                Type();
-                Verifica(IDENTIFIER);
+                verify(',');
+                type();
+                verify(IDENTIFIER);
             }
         }
-        Verifica(')');
-        Verifica('{');
+        verify(')');
+        verify('{');
         while (laToken == INT || laToken == BOOLEAN || laToken == IDENTIFIER) {
-            VarDeclaration();
+            varDeclaration();
         }
-        while (laToken == IF || laToken == WHILE || laToken == PRINT || laToken == '{' || laToken == IDENTIFIER) {
-            Statement();
+        while (laToken == IF || laToken == WHILE || laToken == PRINT || laToken == '{' || laToken == IDENTIFIER || laToken == STATEMENT) {
+            statement();
         }
-        Verifica(RETURN);
-        Expression();
-        Verifica(';');
-        Verifica('}');
+        verify(RETURN);
+        expression();
+        verify(';');
+        verify('}');
     }
 
-    private void Type() {
+    private void type() {
         // "int" "[" "]" | "boolean" | "int" | Identifier
+        printDebug("Entering type");
         if (laToken == INT) {
-            Verifica(INT);
+            verify(INT);
             if (laToken == '[') {
-                Verifica('[');
-                Verifica(']');
+                verify('[');
+                verify(']');
             }
         } else if (laToken == BOOLEAN) {
-            Verifica(BOOLEAN);
+            verify(BOOLEAN);
         } else {
-            Verifica(IDENTIFIER);
+            verify(IDENTIFIER);
         }
     }
 
-    private void Statement() {
-        Verifica(STATEMENT);
+    private void statement() {
+        verify(STATEMENT);
     }
 
-    private void Expression() {
-        Verifica(EXPRESSION);
+    private void expression() {
+        verify(EXPRESSION);
     }
 
-    private void Verifica(int expected) {
-        if (laToken == expected)
-            laToken = this.yylex();
-        else {
+    private void verify(int expected) {
+        printDebug("Verify " + ((laToken < BASE_TOKEN_NUM)
+                ? Character.toString(laToken)
+                : tokenNames.get(laToken)));
+
+        if (laToken == expected) {
+            laToken = this.readToken();
+        } else {
             String expStr, laStr;
 
             expStr = ((expected < BASE_TOKEN_NUM)
                     ? "" + (char) expected
-                    : tokenList[expected - BASE_TOKEN_NUM]);
+                    : tokenNames.get(expected));
 
             laStr = ((laToken < BASE_TOKEN_NUM)
                     ? Character.toString(laToken)
-                    : tokenList[laToken - BASE_TOKEN_NUM]);
+                    : tokenNames.get(laToken));
 
-            yyerror("esperado token: " + expStr +
-                    " na entrada: " + laStr);
+            error("expected token " + expStr + ", got " + laStr + " instead");
         }
     }
 
-    /* metodo de acesso ao Scanner gerado pelo JFLEX */
-    private int yylex() {
+    private void printDebug(String str) {
+        if (debug) {
+            System.out.println(str);
+        }
+    }
+
+    private int readToken() {
         int retVal = -1;
         try {
-            yylval = new ParserVal(0); // zera o valor do token
-            retVal = lexer.yylex(); // le a entrada do arquivo e retorna um token
+//            yylval = new ParserVal(0);
+            retVal = lexer.yylex();
         } catch (IOException e) {
             System.err.println("IO Error:" + e);
         }
-        return retVal; // retorna o token para o Parser
+
+        return retVal;
     }
 
-    /* metodo de manipulacao de erros de sintaxe */
-    public void yyerror(String error) {
-        System.err.println("Erro: " + error);
-        System.err.println("Entrada rejeitada");
-        System.out.println("\n\nFalhou!!!");
+    public void error(String error) {
+        System.err.println("Error: " + error);
+        System.err.println("Input rejected");
+        System.out.println("\n\nFailure!");
         System.exit(1);
 
     }
@@ -226,46 +260,28 @@ public class Parser {
         debug = trace;
     }
 
-    /**
-     * Runs the scanner on input files.
-     *
-     * This main method is the debugging routine for the scanner.
-     * It prints debugging information about each returned token to
-     * System.out until the end of file is reached, or an error occured.
-     *
-     * @param args the command line, contains the filenames to run
-     *             the scanner on.
-     */
     public static void main(String[] args) {
         Parser parser = null;
         try {
-            if (args.length == 0)
+            if (args.length == 0) {
                 parser = new Parser(new InputStreamReader(System.in));
-            else
+            } else {
                 parser = new Parser(new java.io.FileReader(args[0]));
+            }
 
-            parser.setDebug(false);
-            laToken = parser.yylex();
+            parser.setDebug(true);
+            laToken = parser.readToken();
 
-            parser.Goal();
+            parser.goal();
 
-            if (laToken == Yylex.YYEOF)
-                System.out.println("Sucesso!");
-            else
-                System.out.println("Falhou - esperado EOF.");
-
+            if (laToken == Yylex.YYEOF) {
+                System.out.println("Success!");
+            } else {
+                System.out.println("Failed - expected EOF.");
+            }
         } catch (java.io.FileNotFoundException e) {
             System.out.println("File not found : \"" + args[0] + "\"");
         }
-        // catch (java.io.IOException e) {
-        // System.out.println("IO error scanning file \""+args[0]+"\"");
-        // System.out.println(e);
-        // }
-        // catch (Exception e) {
-        // System.out.println("Unexpected exception:");
-        // e.printStackTrace();
-        // }
-
     }
 
 }
