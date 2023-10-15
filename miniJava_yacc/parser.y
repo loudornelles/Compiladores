@@ -21,8 +21,6 @@
 %token LENGTH
 %token TRUE
 %token FALSE
-%token STATEMENT
-%token EXPRESSION
 %token IDENTIFIER
 %token INTEGER
 %token EQUALS
@@ -34,14 +32,150 @@
 
 %%
 
-goal:
-        | CLASS mainclass
+goal:   mainclass
+        | mainclass classdecllist
         ;
 
-mainclass:
-            | IDENTIFIER
+
+mainclass:  CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' statement '}' '}'
             ;
 
+classdecllist:  classdecllist classdecl
+                | classdecl
+                ;
+
+classdecl:  CLASS IDENTIFIER classextends classbody
+            | CLASS IDENTIFIER classbody
+            ;
+
+classbody:  '{' '}'
+            | '{' classbodyinner '}'
+            ;
+
+classbodyinner: vardecllist
+                | methoddecllist
+                | vardecllist methoddecllist
+                ;
+
+classextends:   EXTENDS IDENTIFIER
+                ;
+
+vardecllist:    vardecllist vardecl
+                | vardecl
+                ;
+
+vardecl:    type IDENTIFIER ';'
+            ;
+
+methoddecllist: methoddecllist methoddecl
+                | methoddecl
+                ;
+
+methoddecl: PUBLIC type IDENTIFIER '(' ')' methoddeclbody
+            ;
+
+methoddeclbody: '{' methodreturn '}'
+                | '{' methoddeclbodyinner methodreturn '}'
+                ;
+
+methoddeclbodyinner:    vardecllist
+                        | statementlist
+                        | vardecllist statementlist
+                        ;
+
+methodreturn:   RETURN Expression ';'
+                ;
+
+type:   INT '[' ']'
+        | BOOLEAN
+        | INT
+        | IDENTIFIER
+        ;
+
+statement:  '{' '}'
+            | '{' statementlist '}'
+            | IF '(' Expression ')' statement ELSE statement
+            | WHILE '(' Expression ')' statement
+            | PRINT '(' Expression ')'
+            | IDENTIFIER '=' Expression ';'
+            | IDENTIFIER '[' Expression ']' '=' Expression ';'
+            ;
+
+statementlist:  statementlist statement
+                | statement
+                ;
+
+// Expression: Expression Operator Expression
+            // | Expression '[' Expression ']'
+            // | Expression '.' LENGTH
+            // | Expression '.' IDENTIFIER '(' ')'
+            // | Expression '.' IDENTIFIER '(' ExpressionList ')'
+            // | INTEGER
+            // | TRUE
+            // | FALSE
+            // | IDENTIFIER
+            // | THIS
+            // | NEW INT '[' Expression ']'
+            // | NEW IDENTIFIER '(' ')'
+            // | '!' Expression
+            // | '(' Expression ')'
+            // ;
+
+Expression: INTEGER
+// Expression AND Expression
+//             | Expression '<' Expression
+//             | Expression '+' Expression
+//             | Expression '-' Expression
+//             | Expression '*' Expression
+            // | Expression '[' Expression ']'
+            | Expression '.' LENGTH
+            // | Expression '.' IDENTIFIER '(' ')'
+            // | Expression '.' IDENTIFIER '(' ExpressionList ')'
+            | TRUE
+            | FALSE
+            | IDENTIFIER
+            | THIS
+            | NEW INT '[' Expression ']'
+            | NEW IDENTIFIER '(' ')'
+            | '!' Expression
+            | '(' Expression ')'
+            ;
+
+// Expression: ExpressionFinal
+//             // | Expression ExpressionSide
+//             | NEW INT '[' Expression ']'
+//             | NEW IDENTIFIER '(' ')'
+//             | '!' Expression
+//             | '(' Expression ')'
+//             ;
+
+// ExpressionFinal: INTEGER
+//                 | TRUE
+//                 | FALSE
+//                 | IDENTIFIER
+//                 | THIS
+//                 ;
+
+
+// ExpressionSide: Operator Expression
+//                 | '[' Expression ']'
+//                 | '.' LENGTH
+//                 | '.' IDENTIFIER '(' ')'
+//                 | '.' IDENTIFIER '(' ExpressionList ')'
+//                 ;
+
+
+
+ExpressionList: Expression
+                | ExpressionList ',' Expression
+                ;
+
+// Operator:   '&&' 
+//             | '<'  
+//             | '+'
+//             | '-' 
+//             | '*'
+//             ;
 %%
 
 /* método de chamada do Parser via linha de comando */
