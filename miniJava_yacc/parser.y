@@ -32,77 +32,86 @@
 
 %%
 
-goal:   mainclass
-        | mainclass classdecllist
+goal:   mainclass { System.out.println("goal"); }
+        | mainclass classdecllist { System.out.println("goal"); }
         ;
 
 
-mainclass:  CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' statement '}' '}'
+mainclass:  CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' statement '}' '}' { System.out.println("mainclass"); }
             ;
 
-classdecllist:  classdecllist classdecl
-                | classdecl
+classdecllist:  classdecllist classdecl { System.out.println("classdecllist"); }
+                | classdecl { System.out.println("classdecllist"); }
                 ;
 
-classdecl:  CLASS IDENTIFIER classextends classbody
-            | CLASS IDENTIFIER classbody
+classdecl:  CLASS IDENTIFIER classextends classbody { System.out.println("classdecl"); }
+            | CLASS IDENTIFIER classbody    { System.out.println("classdecl"); }
             ;
 
-classbody:  '{' '}'
-            | '{' classbodyinner '}'
+classbody:  '{' '}' { System.out.println("classbody"); }
+            | '{' classbodyinner '}' { System.out.println("classbody"); }
             ;
 
-classbodyinner: vardecllist
-                | methoddecllist
-                | vardecllist methoddecllist
+classbodyinner: vardecllist { System.out.println("classbodyinner"); }
+                | methoddecllist { System.out.println("classbodyinner"); }
+                | vardecllist methoddecllist { System.out.println("classbodyinner"); }
                 ;
 
-classextends:   EXTENDS IDENTIFIER
+classextends:   EXTENDS IDENTIFIER { System.out.println("classextends"); }
                 ;
 
-vardecllist:    vardecllist vardecl
-                | vardecl
+vardecllist:    vardecllist vardecl { System.out.println("vardecllist");}
+                | vardecl { System.out.println("vardecllist");}
                 ;
 
-vardecl:    type IDENTIFIER ';'
+vardecl:    type IDENTIFIER ';' { System.out.println("vardecl"); }
             ;
 
-methoddecllist: methoddecllist methoddecl
-                | methoddecl
+methoddecllist: methoddecllist methoddecl { System.out.println("methoddecllist"); }
+                | methoddecl { System.out.println("methoddecllist"); }
                 ;
 
-methoddecl: PUBLIC type IDENTIFIER '(' ')' methoddeclbody
+methoddecl: PUBLIC type IDENTIFIER '(' argslist ')' methoddeclbody { System.out.println("methoddecl"); }
+            | PUBLIC type IDENTIFIER '(' ')' methoddeclbody { System.out.println("methoddecl"); }
             ;
 
-methoddeclbody: '{' methodreturn '}'
-                | '{' methoddeclbodyinner methodreturn '}'
+argslist:   argslist ',' arg
+            | arg
+            ;
+
+arg:    type IDENTIFIER
+        ;
+
+methoddeclbody: '{' methodreturn '}' { System.out.println("methoddeclbody"); }
+                | '{' methoddeclbodyinner methodreturn '}' { System.out.println("methoddeclbody"); }
                 ;
 
-methoddeclbodyinner:    vardecllist
-                        | statementlist
-                        | vardecllist statementlist
+methoddeclbodyinner:    vardecllist { System.out.println("methoddeclbodyinner"); }
+                        | statementlist { System.out.println("methoddeclbodyinner"); }
+                        | vardecllist statementlist { System.out.println("methoddeclbodyinner"); }
                         ;
 
-methodreturn:   RETURN Expression ';'
+
+methodreturn:   RETURN Expression ';' { System.out.println("methodreturn"); }
                 ;
 
-type:   INT '[' ']'
-        | BOOLEAN
-        | INT
-        | IDENTIFIER
+type:   INT '[' ']' { System.out.println("type"); }
+        | BOOLEAN { System.out.println("type"); }
+        | INT { System.out.println("type"); }
+        | IDENTIFIER { System.out.println("type"); }
         ;
 
-statement:  '{' '}'
-            | '{' statementlist '}'
-            | IF '(' Expression ')' statement ELSE statement
-            | WHILE '(' Expression ')' statement
-            | PRINT '(' Expression ')'
-            | IDENTIFIER '=' Expression ';'
-            | IDENTIFIER '[' Expression ']' '=' Expression ';'
+statement:  '{' '}' { System.out.println("statement"); }
+            | '{' statementlist '}' { System.out.println("statement"); }
+            | IF '(' Expression ')' statement ELSE statement { System.out.println("statement"); }
+            | WHILE '(' Expression ')' statement { System.out.println("statement"); }
+            | PRINT '(' Expression ')' ';' { System.out.println("statement"); }
+            | IDENTIFIER '=' Expression ';' { System.out.println("statement"); }
+            | IDENTIFIER '[' Expression ']' '=' Expression ';' { System.out.println("statement"); }
             ;
 
-statementlist:  statementlist statement
-                | statement
+statementlist:  statementlist statement { System.out.println("statementlist"); }
+                | statement { System.out.println("statementlist"); }
                 ;
 
 // Expression: Expression Operator Expression
@@ -193,6 +202,7 @@ public static void main (String [] args) throws IOException {
 /* construtor da classe Parser gerada pleo BYACC */
 public Parser (Reader r) {
     lexer = new Yylex (r, this);
+    // yydebug = true;
 }
 
 /* referência ao objeto Yylex gerado pelo JFLEX */
