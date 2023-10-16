@@ -121,61 +121,67 @@ statementlist:  statementlist statement
             // | '(' Expression ')'
             // ;
 
-Expression: INTEGER
-// Expression AND Expression
-//             | Expression '<' Expression
-//             | Expression '+' Expression
-//             | Expression '-' Expression
-//             | Expression '*' Expression
-            // | Expression '[' Expression ']'
-            | Expression '.' LENGTH
-            // | Expression '.' IDENTIFIER '(' ')'
-            // | Expression '.' IDENTIFIER '(' ExpressionList ')'
-            | TRUE
-            | FALSE
-            | IDENTIFIER
-            | THIS
-            | NEW INT '[' Expression ']'
-            | NEW IDENTIFIER '(' ')'
-            | '!' Expression
-            | '(' Expression ')'
-            ;
+// ------------------------------------
 
-// Expression: ExpressionFinal
-//             // | Expression ExpressionSide
+// Expression: 
+//             Expression AND Expression ''
+//             | Expression '<' Expression ''
+//             | Expression '+' Expression ''
+//             | Expression '-' Expression ''
+//             | Expression '*' Expression ''
+//             | Expression '[' Expression ']'
+//             | Expression '.' LENGTH
+//             | Expression '.' IDENTIFIER '(' ')'
+//             | Expression '.' IDENTIFIER '(' ExpressionList ')'
+            
+//             INTEGER
+//             | TRUE
+//             | FALSE
+//             | IDENTIFIER
+//             | THIS
 //             | NEW INT '[' Expression ']'
 //             | NEW IDENTIFIER '(' ')'
-//             | '!' Expression
+//             | '!' Expression ''
 //             | '(' Expression ')'
 //             ;
 
-// ExpressionFinal: INTEGER
-//                 | TRUE
-//                 | FALSE
-//                 | IDENTIFIER
-//                 | THIS
+// ExpressionList: Expression
+//                 | ExpressionList ',' Expression
 //                 ;
 
-
-// ExpressionSide: Operator Expression
-//                 | '[' Expression ']'
-//                 | '.' LENGTH
-//                 | '.' IDENTIFIER '(' ')'
-//                 | '.' IDENTIFIER '(' ExpressionList ')'
-//                 ;
+// ------------------------------------
 
 
+
+
+Expression: Expression AND PrimaryExpression
+            | Expression '<' PrimaryExpression
+            | Expression '+' PrimaryExpression
+            | Expression '-' PrimaryExpression
+            | Expression '*' PrimaryExpression
+            | Expression '[' Expression ']'
+            | Expression '.' LENGTH
+            | Expression '.' IDENTIFIER '(' ')'
+            | Expression '.' IDENTIFIER '(' ExpressionList ')'
+            | PrimaryExpression
+            ;
+
+PrimaryExpression:  INTEGER
+                    | TRUE
+                    | FALSE
+                    | IDENTIFIER
+                    | THIS
+                    | NEW INT '[' Expression ']'
+                    | NEW IDENTIFIER '(' ')'
+                    | '!' PrimaryExpression
+                    | '(' Expression ')'
+                    ;
 
 ExpressionList: Expression
                 | ExpressionList ',' Expression
                 ;
 
-// Operator:   '&&' 
-//             | '<'  
-//             | '+'
-//             | '-' 
-//             | '*'
-//             ;
+
 %%
 
 /* método de chamada do Parser via linha de comando */
