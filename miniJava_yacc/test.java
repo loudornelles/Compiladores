@@ -3,3 +3,12 @@ class Factorial{
 	   {}
     }
 }
+
+class Other {
+    public int Start(int sz){
+        int a;
+        a = 0;
+
+        return 12;
+    }
+}

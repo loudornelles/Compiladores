@@ -36,175 +36,94 @@
 
 %%
 
-// Goal:   MainClass ClassDeclarationarationListOptional
-//         ;
+Goal:   MainClass ClassDeclarationarationListOptional
+        ;
 
-// MainClass:  CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}'
+MainClass:  CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}'
 
 
-// ClassDeclarationarationList:    ClassDeclaration
-//                                 | ClassDeclarationarationList ClassDeclaration
-//                                 ;
+ClassDeclarationarationList:    ClassDeclaration
+                                | ClassDeclarationarationList ClassDeclaration
+                                ;
 
-// ClassDeclarationarationListOptional:    // empty
-//                                         | ClassDeclarationarationList
-//                                         ;
+ClassDeclarationarationListOptional:    // empty
+                                        | ClassDeclarationarationList
+                                        ;
 
-// ClassDeclaration:   CLASS IDENTIFIER ClassExtendsOptional '{' VarDeclarationList MethodDeclarationList '}'
-//                     ;
+ClassDeclaration:   CLASS IDENTIFIER ClassExtendsOptional '{' VarDeclarationList MethodDeclarationList '}'
+                    ;
 
-// ClassExtendsOptional:   // empty
-//                         | EXTENDS IDENTIFIER
-//                         ;
+ClassExtendsOptional:   // empty
+                        | EXTENDS IDENTIFIER
+                        ;
 
-// VarDeclarationList: // empty
-//                     | VarDeclarationList VarDeclaration
-//                     ;
+VarDeclarationList: // empty
+                    | VarDeclarationList VarDeclaration
+                    ;
 
-// VarDeclaration: Type IDENTIFIER ';'
+VarDeclaration: Type IDENTIFIER ';'
 
-// Type:   INT '[' ']'
-//         | BOOLEAN
-//         | INT
-//         | IDENTIFIER
-//         ;
+Type:   INT '[' ']'
+        | BOOLEAN
+        | INT
+        | IDENTIFIER
+        ;
 
-// MethodDeclarationList:  // empty
-//                         | MethodDeclarationList MethodDeclaration
-//                         ;
+MethodDeclarationList:  // empty
+                        | MethodDeclarationList MethodDeclaration
+                        ;
 
-// MethodDeclaration:  PUBLIC Type IDENTIFIER '(' ArgsListOptional ')' '{' VarDeclarationList StatementListOptional RETURN Expression ';' '}'
+MethodDeclaration:  PUBLIC Type IDENTIFIER '(' ArgsListOptional ')' '{' VarDeclarationList StatementListOptional RETURN Expression ';' '}'
 
-// ArgsListOptional:   // empty
-//                     | ArgsList
-//                     ;
+ArgsListOptional:   // empty
+                    | ArgsList
+                    ;
 
-// ArgsList:   ArgsList ',' Arg 
-//             | Arg
-//             ;
+ArgsList:   ArgsList ',' Arg 
+            | Arg
+            ;
 
-// Arg: Type IDENTIFIER
+Arg: Type IDENTIFIER
 
-// Statement:  '{' StatementListOptional '}'
-//             | IF '(' Expression ')' Statement ELSE Statement
-//             | WHILE '(' Expression ')' Statement
-//             | PRINT '(' Expression ')' ';'
-//             | IDENTIFIER '=' Expression ';'
-//             | IDENTIFIER '[' Expression ']' '=' Expression ';'
-//             ;
+Statement:  '{' StatementListOptional '}'
+            | IF '(' Expression ')' Statement ELSE Statement
+            | WHILE '(' Expression ')' Statement
+            | PRINT '(' Expression ')' ';'
+            | IDENTIFIER '=' Expression ';'
+            | IDENTIFIER '[' Expression ']' '=' Expression ';'
+            ;
 
-// StatementList:  StatementList Statement
-//                 | Statement
-//                 ;
+StatementList:  StatementList Statement
+                | Statement
+                ;
 
-// StatementListOptional:  // empty
-//                         | StatementList
-//                         ;
-
-// Expression: Expression Operator Expression
-//             | Expression '[' Expression ']'
-//             | Expression '.' LENGTH
-//             | Expression '.' IDENTIFIER '(' ExpressionList ')'
-//             | INTEGER
-//             | TRUE
-//             | FALSE
-//             | IDENTIFIER
-//             | THIS
-//             | NEW INT '[' Expression ']'
-//             | NEW IDENTIFIER '('')'
-//             | '!' Expression
-//             | '(' Expression ')'
-//             ;
-
-// ExpressionList: // empty
-//                 | Expression
-//                 | ExpressionList ',' Expression
-//                 ;
-
-// Operator:   AND
-//             | '<'
-//             | '+'
-//             | '-'
-//             | '*'
-//             ;
-
-Goal: MainClass ClassDeclarations;
-
-MainClass: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}';
-
-ClassDeclarationList: ClassDeclaration
-                     | ClassDeclarationList ClassDeclaration;
-
-ClassDeclarations :
-                  | ClassDeclarationList;
-
-ClassDeclaration: CLASS IDENTIFIER ExtendOpt '{' VarDeclarations MethodDeclarations '}';
-
-ExtendOpt :
-          | EXTENDS IDENTIFIER;
-
-VarDeclarations :
-                | VarDeclarations VarDeclaration;
-
-VarDeclaration: Type IDENTIFIER ';';
-
-MethodDeclarations :
-                   | MethodDeclarationList;
-
-MethodDeclarationList: MethodDeclaration
-                      | MethodDeclarationList MethodDeclaration;
-
-MethodDeclaration: PUBLIC Type IDENTIFIER '(' TypeIdentifiers ')' '{' VarDeclarations Statements RETURN Expression ';' '}';
-
-TypeIdentifiers :
-                | TypeIdentifierList;
-
-TypeIdentifierList: TypeIdentifier
-                   | TypeIdentifierList ',' TypeIdentifier;
-
-TypeIdentifier: Type IDENTIFIER;
-
-Statements :
-           | StatementList;
-
-StatementList: Statement
-              | StatementList Statement;
-
-Type: INT
-     | INT '[' ']'
-     | BOOLEAN
-     | IDENTIFIER;
-
-Statement: '{' Statements '}'
-          | IF '(' Expression ')' Statement ELSE Statement
-          | WHILE '(' Expression ')' Statement
-          | PRINT '(' Expression ')' ';'
-          | IDENTIFIER '=' Expression ';'
-          | IDENTIFIER '[' Expression ']' '=' Expression ';';
-
-Expressions :
-            | ExpressionList;
-
-ExpressionList: Expression
-               | ExpressionList ',' Expression;
+StatementListOptional:  // empty
+                        | StatementList
+                        ;
 
 Expression: Expression AND Expression
-           | Expression '<' Expression
-           | Expression '+' Expression
-           | Expression '-' Expression
-           | Expression '*' Expression
-           | Expression '[' Expression ']'
-           | Expression '.' LENGTH
-           | Expression '.' IDENTIFIER '(' Expressions ')'
-           | TRUE
-           | FALSE
-           | IDENTIFIER
-           | THIS
-           | NEW INT '[' Expression ']'
-           | NEW IDENTIFIER '(' ')'
-           | '!' Expression
-           | '(' Expression ')'
-           | INTEGER;
+            | Expression '<' Expression
+            | Expression '+' Expression
+            | Expression '-' Expression
+            | Expression '*' Expression
+            | Expression '[' Expression ']'
+            | Expression '.' LENGTH
+            | Expression '.' IDENTIFIER '(' ExpressionList ')'
+            | INTEGER
+            | TRUE
+            | FALSE
+            | IDENTIFIER
+            | THIS
+            | NEW INT '[' Expression ']'
+            | NEW IDENTIFIER '('')'
+            | '!' Expression
+            | '(' Expression ')'
+            ;
+
+ExpressionList: // empty
+                | Expression
+                | ExpressionList ',' Expression
+                ;
 
 %%
 
