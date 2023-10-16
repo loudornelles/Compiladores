@@ -26,170 +26,185 @@
 %token EQUALS
 %token AND
 
-
+%left '[' '{'
+%right '='
+%left '.'
 %left '-' '+'
-%left '/' '*'
+%left '*'
+%left AND '<'
+%right '!'
 
 %%
 
-goal:   mainclass { System.out.println("goal"); }
-        | mainclass classdecllist { System.out.println("goal"); }
-        ;
+// Goal:   MainClass ClassDeclarationarationListOptional
+//         ;
+
+// MainClass:  CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}'
 
 
-mainclass:  CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' statement '}' '}' { System.out.println("mainclass"); }
-            ;
+// ClassDeclarationarationList:    ClassDeclaration
+//                                 | ClassDeclarationarationList ClassDeclaration
+//                                 ;
 
-classdecllist:  classdecllist classdecl { System.out.println("classdecllist"); }
-                | classdecl { System.out.println("classdecllist"); }
-                ;
+// ClassDeclarationarationListOptional:    // empty
+//                                         | ClassDeclarationarationList
+//                                         ;
 
-classdecl:  CLASS IDENTIFIER classextends classbody { System.out.println("classdecl"); }
-            | CLASS IDENTIFIER classbody    { System.out.println("classdecl"); }
-            ;
+// ClassDeclaration:   CLASS IDENTIFIER ClassExtendsOptional '{' VarDeclarationList MethodDeclarationList '}'
+//                     ;
 
-classbody:  '{' '}' { System.out.println("classbody"); }
-            | '{' classbodyinner '}' { System.out.println("classbody"); }
-            ;
+// ClassExtendsOptional:   // empty
+//                         | EXTENDS IDENTIFIER
+//                         ;
 
-classbodyinner: vardecllist { System.out.println("classbodyinner"); }
-                | methoddecllist { System.out.println("classbodyinner"); }
-                | vardecllist methoddecllist { System.out.println("classbodyinner"); }
-                ;
+// VarDeclarationList: // empty
+//                     | VarDeclarationList VarDeclaration
+//                     ;
 
-classextends:   EXTENDS IDENTIFIER { System.out.println("classextends"); }
-                ;
+// VarDeclaration: Type IDENTIFIER ';'
 
-vardecllist:    vardecllist vardecl { System.out.println("vardecllist");}
-                | vardecl { System.out.println("vardecllist");}
-                ;
+// Type:   INT '[' ']'
+//         | BOOLEAN
+//         | INT
+//         | IDENTIFIER
+//         ;
 
-vardecl:    type IDENTIFIER ';' { System.out.println("vardecl"); }
-            ;
+// MethodDeclarationList:  // empty
+//                         | MethodDeclarationList MethodDeclaration
+//                         ;
 
-methoddecllist: methoddecllist methoddecl { System.out.println("methoddecllist"); }
-                | methoddecl { System.out.println("methoddecllist"); }
-                ;
+// MethodDeclaration:  PUBLIC Type IDENTIFIER '(' ArgsListOptional ')' '{' VarDeclarationList StatementListOptional RETURN Expression ';' '}'
 
-methoddecl: PUBLIC type IDENTIFIER '(' argslist ')' methoddeclbody { System.out.println("methoddecl"); }
-            | PUBLIC type IDENTIFIER '(' ')' methoddeclbody { System.out.println("methoddecl"); }
-            ;
+// ArgsListOptional:   // empty
+//                     | ArgsList
+//                     ;
 
-argslist:   argslist ',' arg
-            | arg
-            ;
+// ArgsList:   ArgsList ',' Arg 
+//             | Arg
+//             ;
 
-arg:    type IDENTIFIER
-        ;
+// Arg: Type IDENTIFIER
 
-methoddeclbody: '{' methodreturn '}' { System.out.println("methoddeclbody"); }
-                | '{' methoddeclbodyinner methodreturn '}' { System.out.println("methoddeclbody"); }
-                ;
+// Statement:  '{' StatementListOptional '}'
+//             | IF '(' Expression ')' Statement ELSE Statement
+//             | WHILE '(' Expression ')' Statement
+//             | PRINT '(' Expression ')' ';'
+//             | IDENTIFIER '=' Expression ';'
+//             | IDENTIFIER '[' Expression ']' '=' Expression ';'
+//             ;
 
-methoddeclbodyinner:    vardecllist { System.out.println("methoddeclbodyinner"); }
-                        | statementlist { System.out.println("methoddeclbodyinner"); }
-                        | vardecllist statementlist { System.out.println("methoddeclbodyinner"); }
-                        ;
+// StatementList:  StatementList Statement
+//                 | Statement
+//                 ;
 
-
-methodreturn:   RETURN Expression ';' { System.out.println("methodreturn"); }
-                ;
-
-type:   INT '[' ']' { System.out.println("type"); }
-        | BOOLEAN { System.out.println("type"); }
-        | INT { System.out.println("type"); }
-        | IDENTIFIER { System.out.println("type"); }
-        ;
-
-statement:  '{' '}' { System.out.println("statement"); }
-            | '{' statementlist '}' { System.out.println("statement"); }
-            | IF '(' Expression ')' statement ELSE statement { System.out.println("statement"); }
-            | WHILE '(' Expression ')' statement { System.out.println("statement"); }
-            | PRINT '(' Expression ')' ';' { System.out.println("statement"); }
-            | IDENTIFIER '=' Expression ';' { System.out.println("statement"); }
-            | IDENTIFIER '[' Expression ']' '=' Expression ';' { System.out.println("statement"); }
-            ;
-
-statementlist:  statementlist statement { System.out.println("statementlist"); }
-                | statement { System.out.println("statementlist"); }
-                ;
+// StatementListOptional:  // empty
+//                         | StatementList
+//                         ;
 
 // Expression: Expression Operator Expression
-            // | Expression '[' Expression ']'
-            // | Expression '.' LENGTH
-            // | Expression '.' IDENTIFIER '(' ')'
-            // | Expression '.' IDENTIFIER '(' ExpressionList ')'
-            // | INTEGER
-            // | TRUE
-            // | FALSE
-            // | IDENTIFIER
-            // | THIS
-            // | NEW INT '[' Expression ']'
-            // | NEW IDENTIFIER '(' ')'
-            // | '!' Expression
-            // | '(' Expression ')'
-            // ;
-
-// ------------------------------------
-
-// Expression: 
-//             Expression AND Expression ''
-//             | Expression '<' Expression ''
-//             | Expression '+' Expression ''
-//             | Expression '-' Expression ''
-//             | Expression '*' Expression ''
 //             | Expression '[' Expression ']'
 //             | Expression '.' LENGTH
-//             | Expression '.' IDENTIFIER '(' ')'
 //             | Expression '.' IDENTIFIER '(' ExpressionList ')'
-            
-//             INTEGER
+//             | INTEGER
 //             | TRUE
 //             | FALSE
 //             | IDENTIFIER
 //             | THIS
 //             | NEW INT '[' Expression ']'
-//             | NEW IDENTIFIER '(' ')'
-//             | '!' Expression ''
+//             | NEW IDENTIFIER '('')'
+//             | '!' Expression
 //             | '(' Expression ')'
 //             ;
 
-// ExpressionList: Expression
+// ExpressionList: // empty
+//                 | Expression
 //                 | ExpressionList ',' Expression
 //                 ;
 
-// ------------------------------------
+// Operator:   AND
+//             | '<'
+//             | '+'
+//             | '-'
+//             | '*'
+//             ;
 
+Goal: MainClass ClassDeclarations;
 
+MainClass: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}';
 
+ClassDeclarationList: ClassDeclaration
+                     | ClassDeclarationList ClassDeclaration;
 
-Expression: Expression AND PrimaryExpression
-            | Expression '<' PrimaryExpression
-            | Expression '+' PrimaryExpression
-            | Expression '-' PrimaryExpression
-            | Expression '*' PrimaryExpression
-            | Expression '[' Expression ']'
-            | Expression '.' LENGTH
-            | Expression '.' IDENTIFIER '(' ')'
-            | Expression '.' IDENTIFIER '(' ExpressionList ')'
-            | PrimaryExpression
-            ;
+ClassDeclarations :
+                  | ClassDeclarationList;
 
-PrimaryExpression:  INTEGER
-                    | TRUE
-                    | FALSE
-                    | IDENTIFIER
-                    | THIS
-                    | NEW INT '[' Expression ']'
-                    | NEW IDENTIFIER '(' ')'
-                    | '!' PrimaryExpression
-                    | '(' Expression ')'
-                    ;
+ClassDeclaration: CLASS IDENTIFIER ExtendOpt '{' VarDeclarations MethodDeclarations '}';
+
+ExtendOpt :
+          | EXTENDS IDENTIFIER;
+
+VarDeclarations :
+                | VarDeclarations VarDeclaration;
+
+VarDeclaration: Type IDENTIFIER ';';
+
+MethodDeclarations :
+                   | MethodDeclarationList;
+
+MethodDeclarationList: MethodDeclaration
+                      | MethodDeclarationList MethodDeclaration;
+
+MethodDeclaration: PUBLIC Type IDENTIFIER '(' TypeIdentifiers ')' '{' VarDeclarations Statements RETURN Expression ';' '}';
+
+TypeIdentifiers :
+                | TypeIdentifierList;
+
+TypeIdentifierList: TypeIdentifier
+                   | TypeIdentifierList ',' TypeIdentifier;
+
+TypeIdentifier: Type IDENTIFIER;
+
+Statements :
+           | StatementList;
+
+StatementList: Statement
+              | StatementList Statement;
+
+Type: INT
+     | INT '[' ']'
+     | BOOLEAN
+     | IDENTIFIER;
+
+Statement: '{' Statements '}'
+          | IF '(' Expression ')' Statement ELSE Statement
+          | WHILE '(' Expression ')' Statement
+          | PRINT '(' Expression ')' ';'
+          | IDENTIFIER '=' Expression ';'
+          | IDENTIFIER '[' Expression ']' '=' Expression ';';
+
+Expressions :
+            | ExpressionList;
 
 ExpressionList: Expression
-                | ExpressionList ',' Expression
-                ;
+               | ExpressionList ',' Expression;
 
+Expression: Expression AND Expression
+           | Expression '<' Expression
+           | Expression '+' Expression
+           | Expression '-' Expression
+           | Expression '*' Expression
+           | Expression '[' Expression ']'
+           | Expression '.' LENGTH
+           | Expression '.' IDENTIFIER '(' Expressions ')'
+           | TRUE
+           | FALSE
+           | IDENTIFIER
+           | THIS
+           | NEW INT '[' Expression ']'
+           | NEW IDENTIFIER '(' ')'
+           | '!' Expression
+           | '(' Expression ')'
+           | INTEGER;
 
 %%
 
@@ -222,6 +237,6 @@ private int yylex() {
 
 /* método de manipulação de erros de sintaxe */
 public void yyerror (String error) {
-    System.err.println("Erro : " + error + " na linha " + lexer.getLine());
+    System.err.println("Erro: " + error + " na linha " + lexer.getLine());
     System.err.println("Entrada rejeitada");
 }
