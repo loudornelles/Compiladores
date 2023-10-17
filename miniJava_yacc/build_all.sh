@@ -1,5 +1,5 @@
-java -jar JFlex.jar -d out lexer.flex
-# ./yacc.exe -tv -b $(pwd)/out/Parser.java -J parser.y
-./byaccj.macos -tv -b $(pwd)/out/Parser.java -J parser.y
+java -jar ./bin/JFlex.jar -d ./out src/lexer.flex
+# ./bin/yacc.exe -tv -b $(pwd)/out/Parser.java -J src/parser.y
+./bin/byaccj.macos -tv -b $(pwd)/out/Parser.java -J src/parser.y
 mv Parser.java ParserVal.java ./out
 javac -d out out/*.java
