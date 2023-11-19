@@ -1,6 +1,6 @@
 package ast;
 
-public class LengthExpression {
+public class LengthExpression extends Expression {
     public Expression expression;
 
     public LengthExpression(Expression expression) {

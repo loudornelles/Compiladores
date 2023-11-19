@@ -1,6 +1,7 @@
 package ast;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 
 public class Method {
@@ -12,7 +13,7 @@ public class Method {
     public Expression returnExpression;
     public ClassDeclaration contextClass;
 
-    private Map<String, Var> parametersByName;
+    private Map<String, Var> parametersByName = new HashMap<String, Var>();
 
 
     public Method(

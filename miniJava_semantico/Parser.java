@@ -683,7 +683,7 @@ break;
 case 7:
 //#line 103 "src/parser.y"
 {
-                        yyval.obj = new ClassDeclaration(val_peek(5).sval, (Map<String, Var>)val_peek(2), (Map<String, Method>)val_peek(1));
+                        yyval.obj = new ClassDeclaration(val_peek(5).sval, (Map<String, Var>)val_peek(2).obj, (Map<String, Method>)val_peek(1).obj);
                     }
 break;
 case 8:
@@ -738,7 +738,7 @@ break;
 case 18:
 //#line 135 "src/parser.y"
 {
-                            Map<String, Method> methodDeclList = (Map<String, Method>)val_peek(1);
+                            Map<String, Method> methodDeclList = (Map<String, Method>)val_peek(1).obj;
                             Method method = (Method)val_peek(0).obj;
 
                             methodDeclList.put(method.name, method);
@@ -770,7 +770,7 @@ break;
 case 22:
 //#line 160 "src/parser.y"
 {
-                List<Var> argsList = (List<Var>)val_peek(2);
+                List<Var> argsList = (List<Var>)val_peek(2).obj;
                 Var var = (Var)val_peek(0).obj;
 
                 argsList.add(var);
@@ -820,7 +820,7 @@ break;
 case 31:
 //#line 188 "src/parser.y"
 {
-                    List<Statement> statementList = (List<Statement>)val_peek(1);
+                    List<Statement> statementList = (List<Statement>)val_peek(1).obj;
                     statementList.add((Statement)val_peek(0).obj);
                     yyval.obj = statementList;
                 }
@@ -925,7 +925,7 @@ case 54:
 //#line 229 "src/parser.y"
 {
                     List<Expression> expressions = (List<Expression>)val_peek(2).obj;
-                    expressions.add((Expression)val_peek(2).obj);
+                    expressions.add((Expression)val_peek(1).obj);
                     yyval = val_peek(2);
                 }
 break;

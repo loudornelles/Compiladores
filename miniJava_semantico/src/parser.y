@@ -101,7 +101,7 @@ ClassDeclarationarationListOptional:    { $$.obj = new HashMap<String, ClassDecl
                                         ;
 
 ClassDeclaration:   CLASS IDENTIFIER ClassExtendsOptional '{' VarDeclarationList MethodDeclarationList '}'  {
-                        $$.obj = new ClassDeclaration($2.sval, (Map<String, Var>)$5, (Map<String, Method>)$6);
+                        $$.obj = new ClassDeclaration($2.sval, (Map<String, Var>)$5.obj, (Map<String, Method>)$6.obj);
                     }
                     ;
 
@@ -133,7 +133,7 @@ Type:   INT '[' ']' { $$.obj = Type.intArrayType; }
 
 MethodDeclarationList:  { $$.obj = new HashMap<String, Method>(); } // empty
                         | MethodDeclarationList MethodDeclaration {
-                            Map<String, Method> methodDeclList = (Map<String, Method>)$1;
+                            Map<String, Method> methodDeclList = (Map<String, Method>)$1.obj;
                             Method method = (Method)$2.obj;
 
                             methodDeclList.put(method.name, method);
@@ -158,7 +158,7 @@ ArgsListOptional:   { $$.obj = new ArrayList<Var>(); } // empty
                     ;
 
 ArgsList:   ArgsList ',' Arg {
-                List<Var> argsList = (List<Var>)$1;
+                List<Var> argsList = (List<Var>)$1.obj;
                 Var var = (Var)$3.obj;
 
                 argsList.add(var);
@@ -186,7 +186,7 @@ Statement:  '{' StatementListOptional '}' { $$.obj = new BlockStatement((List<St
             ;
 
 StatementList:  StatementList Statement {
-                    List<Statement> statementList = (List<Statement>)$1;
+                    List<Statement> statementList = (List<Statement>)$1.obj;
                     statementList.add((Statement)$2.obj);
                     $$.obj = statementList;
                 }
@@ -228,7 +228,7 @@ ExpressionList: { $$.obj = new ArrayList<Expression>(); } // empty
                 }
                 | ExpressionList ',' Expression {
                     List<Expression> expressions = (List<Expression>)$1.obj;
-                    expressions.add((Expression)$1.obj);
+                    expressions.add((Expression)$2.obj);
                     $$ = $1;
                 }
                 ;
