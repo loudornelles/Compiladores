@@ -8,4 +8,13 @@ public class AssignmentStatement extends Statement {
         this.name = name;
         this.expression = expression;
     }
+
+    void validate() {
+        Type lhsType = contextMethod.getVarByIdentifer(name).type;
+        Type rhsType = expression.resolveType();
+
+        if (!Type.matches(lhsType, rhsType)) {
+            throw new Error("Incompatible types at assignment.");
+        }
+    }
 }

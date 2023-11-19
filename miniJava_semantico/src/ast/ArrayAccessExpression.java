@@ -8,4 +8,13 @@ public class ArrayAccessExpression extends Expression {
         this.expression = expression;
         this.index = index;
     }
+
+    public Type resolveType() {
+        Type expressionType = expression.resolveType();
+        if (expressionType instanceof ArrayType) {
+            return ((ArrayType)expressionType).type;
+        } else {
+            throw new Error("Not an array.");
+        }
+    }
 }

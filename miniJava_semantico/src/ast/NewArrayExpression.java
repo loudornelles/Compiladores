@@ -8,4 +8,8 @@ public class NewArrayExpression extends Expression {
         this.type = type;
         this.size = size;
     }
+
+    public Type resolveType() {
+        return new ArrayType(type);
+    }
 }

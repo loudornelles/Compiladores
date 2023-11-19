@@ -6,4 +6,8 @@ public class ArrayLengthExpression extends Expression {
     public ArrayLengthExpression(String name) {
         this.name = name;
     }
+
+    public Type resolveType() {
+        return Type.intType;
+    }
 }

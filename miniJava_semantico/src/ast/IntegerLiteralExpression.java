@@ -6,4 +6,8 @@ public class IntegerLiteralExpression extends Expression {
     public IntegerLiteralExpression(int value) {
         this.value = value;
     }
+
+    public Type resolveType() {
+        return Type.intType;
+    }
 }

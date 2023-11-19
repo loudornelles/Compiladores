@@ -49,9 +49,9 @@ Goal:   MainClass ClassDeclarationarationListOptional {
         ;
 
 MainClass:  CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}' {
-                Map<String, Var> parameters = new HashMap<String, Var>();
+                List<Var> parameters = new ArrayList<Var>();
                 Var var = new Var(Type.stringArrayType, $12.sval);
-                parameters.put(var.name, var);
+                parameters.add(var);
                 
                 List<Statement> statements = new ArrayList<Statement>();
                 statements.add((Statement)$15.obj);
@@ -146,30 +146,30 @@ MethodDeclaration:  PUBLIC Type IDENTIFIER '(' ArgsListOptional ')' '{' VarDecla
                         $$.obj = new Method(
                             $3.sval,
                             (Type)$2.obj,
-                            (Map<String, Var>)$5.obj,
+                            (List<Var>)$5.obj,
                             (Map<String, Var>)$8.obj,
                             (List<Statement>)$9.obj,
                             (Expression)$11.obj
                         );
                     }
 
-ArgsListOptional:   { $$.obj = new HashMap<String, Var>(); } // empty
+ArgsListOptional:   { $$.obj = new ArrayList<Var>(); } // empty
                     | ArgsList { $$ = $1; }
                     ;
 
 ArgsList:   ArgsList ',' Arg {
-                Map<String, Var> argsList = (Map<String, Var>)$1;
+                List<Var> argsList = (List<Var>)$1;
                 Var var = (Var)$3.obj;
 
-                argsList.put(var.name, var);
+                argsList.add(var);
 
                 $$.obj = argsList;
             }
             | Arg {
-                Map<String, Var> argsList = new HashMap<String, Var>();
+                List<Var> argsList = new ArrayList<Var>();
                 Var var = (Var)$1.obj;
 
-                argsList.put(var.name, var);
+                argsList.add(var);
 
                 $$.obj = argsList;
             }
@@ -201,11 +201,11 @@ StatementListOptional:  { $$.obj = new ArrayList<Statement>(); } // empty
                         | StatementList { $$ = $1; }
                         ;
 
-Expression: Expression AND Expression { $$.obj = new BinaryExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
-            | Expression '<' Expression { $$.obj = new BinaryExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
-            | Expression '+' Expression { $$.obj = new BinaryExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
-            | Expression '-' Expression { $$.obj = new BinaryExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
-            | Expression '*' Expression { $$.obj = new BinaryExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
+Expression: Expression AND Expression { $$.obj = new BooleanExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
+            | Expression '<' Expression { $$.obj = new BooleanExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
+            | Expression '+' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
+            | Expression '-' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
+            | Expression '*' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
             | Expression '[' Expression ']' { $$.obj = new ArrayAccessExpression((Expression)$1.obj, (Expression)$3.obj); }
             | Expression '.' LENGTH { $$.obj = new LengthExpression((Expression)$1.obj); }
             | Expression '.' IDENTIFIER '(' ExpressionList ')' { $$.obj = new MethodCallExpression((Expression)$1.obj, $3.sval, (List<Expression>)$5.obj); }
@@ -235,11 +235,13 @@ ExpressionList: { $$.obj = new ArrayList<Expression>(); } // empty
 
 %%
 
-Map<String, ClassDeclaration> classes = new HashMap<String, ClassDeclaration>();
+static Map<String, ClassDeclaration> classes = new HashMap<String, ClassDeclaration>();
 
 /* método de chamada do Parser via linha de comando */
 public static void main (String [] args) throws IOException {
     Parser yyparser = new Parser(new FileReader(args[0]));
+    IdentifierType.contextGlobal = classes;
+
     yyparser.yyparse(); // dispara o processo de análise sintática e léxica
 }
 

@@ -8,4 +8,10 @@ public class WhileStatement extends Statement {
         this.condition = condition;
         this.body = body;
     }
+
+    void validate() {
+        if (condition.resolveType() != Type.booleanType) {
+            throw new Error("While statements only allow boolean conditions.");
+        }
+    }
 }

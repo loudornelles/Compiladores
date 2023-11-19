@@ -1,5 +1,7 @@
 package ast;
 
-public class Expression {
+public abstract class Expression {
+    public Method contextMethod;
 
+    public abstract Type resolveType();
 }

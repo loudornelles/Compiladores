@@ -421,11 +421,13 @@ final static String yyrule[] = {
 
 //#line 237 "src/parser.y"
 
-Map<String, ClassDeclaration> classes = new HashMap<String, ClassDeclaration>();
+static Map<String, ClassDeclaration> classes = new HashMap<String, ClassDeclaration>();
 
 /* método de chamada do Parser via linha de comando */
 public static void main (String [] args) throws IOException {
     Parser yyparser = new Parser(new FileReader(args[0]));
+    IdentifierType.contextGlobal = classes;
+
     yyparser.yyparse(); // dispara o processo de análise sintática e léxica
 }
 
@@ -455,7 +457,7 @@ public void yyerror (String error) {
     System.err.println("Erro: " + error + " na linha " + lexer.getLine());
     System.err.println("Entrada rejeitada");
 }
-//#line 387 "Parser.java"
+//#line 389 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -620,9 +622,9 @@ break;
 case 2:
 //#line 51 "src/parser.y"
 {
-                Map<String, Var> parameters = new HashMap<String, Var>();
+                List<Var> parameters = new ArrayList<Var>();
                 Var var = new Var(Type.stringArrayType, val_peek(5).sval);
-                parameters.put(var.name, var);
+                parameters.add(var);
                 
                 List<Statement> statements = new ArrayList<Statement>();
                 statements.add((Statement)val_peek(2).obj);
@@ -750,7 +752,7 @@ case 19:
                         yyval.obj = new Method(
                             val_peek(10).sval,
                             (Type)val_peek(11).obj,
-                            (Map<String, Var>)val_peek(8).obj,
+                            (List<Var>)val_peek(8).obj,
                             (Map<String, Var>)val_peek(5).obj,
                             (List<Statement>)val_peek(4).obj,
                             (Expression)val_peek(2).obj
@@ -759,7 +761,7 @@ case 19:
 break;
 case 20:
 //#line 156 "src/parser.y"
-{ yyval.obj = new HashMap<String, Var>(); }
+{ yyval.obj = new ArrayList<Var>(); }
 break;
 case 21:
 //#line 157 "src/parser.y"
@@ -768,10 +770,10 @@ break;
 case 22:
 //#line 160 "src/parser.y"
 {
-                Map<String, Var> argsList = (Map<String, Var>)val_peek(2);
+                List<Var> argsList = (List<Var>)val_peek(2);
                 Var var = (Var)val_peek(0).obj;
 
-                argsList.put(var.name, var);
+                argsList.add(var);
 
                 yyval.obj = argsList;
             }
@@ -779,10 +781,10 @@ break;
 case 23:
 //#line 168 "src/parser.y"
 {
-                Map<String, Var> argsList = new HashMap<String, Var>();
+                List<Var> argsList = new ArrayList<Var>();
                 Var var = (Var)val_peek(0).obj;
 
-                argsList.put(var.name, var);
+                argsList.add(var);
 
                 yyval.obj = argsList;
             }
@@ -841,23 +843,23 @@ case 34:
 break;
 case 35:
 //#line 204 "src/parser.y"
-{ yyval.obj = new BinaryExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
+{ yyval.obj = new BooleanExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
 break;
 case 36:
 //#line 205 "src/parser.y"
-{ yyval.obj = new BinaryExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
+{ yyval.obj = new BooleanExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
 break;
 case 37:
 //#line 206 "src/parser.y"
-{ yyval.obj = new BinaryExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
+{ yyval.obj = new ArithmeticExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
 break;
 case 38:
 //#line 207 "src/parser.y"
-{ yyval.obj = new BinaryExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
+{ yyval.obj = new ArithmeticExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
 break;
 case 39:
 //#line 208 "src/parser.y"
-{ yyval.obj = new BinaryExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
+{ yyval.obj = new ArithmeticExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
 break;
 case 40:
 //#line 209 "src/parser.y"
@@ -927,7 +929,7 @@ case 54:
                     yyval = val_peek(2);
                 }
 break;
-//#line 854 "Parser.java"
+//#line 856 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

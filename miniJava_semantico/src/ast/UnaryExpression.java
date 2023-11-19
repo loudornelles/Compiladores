@@ -8,4 +8,12 @@ public class UnaryExpression extends Expression {
         this.operator = operator;
         this.expression = expression;
     }
+
+    public Type resolveType() {
+        if (this.operator == "!") {
+            return Type.booleanType;
+        } else {
+            throw new Error("Unsupported operator'" + operator + "'");
+        }
+    }
 }

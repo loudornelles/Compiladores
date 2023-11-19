@@ -10,4 +10,8 @@ public class IdentifierExpression extends Expression {
     }
 
     void validate() {}
+
+    public Type resolveType() {
+        return contextMethod.getVarByIdentifer(name).type;
+    }
 }
