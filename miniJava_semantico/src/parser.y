@@ -2,6 +2,9 @@
   import java.io.*;
   import java.util.Map;
   import java.util.HashMap;
+  import java.util.List;
+  import java.util.ArrayList;
+  import ast.*;
 %}
 
 %token CLASS
@@ -39,17 +42,19 @@
 %%
 
 Goal:   MainClass ClassDeclarationarationListOptional {
-            classes = $2;
-            classes.put($1.name, $1);
+            classes = (Map<String, ClassDeclaration>)$2.obj;
+            ClassDeclaration mainClass = (ClassDeclaration)$1.obj;
+            classes.put(mainClass.name, mainClass);
         }
         ;
 
 MainClass:  CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}' {
                 Map<String, Var> parameters = new HashMap<String, Var>();
-                parameters.put($12, Type.stringArray);
+                Var var = new Var(Type.stringArrayType, $12.sval);
+                parameters.put(var.name, var);
                 
                 List<Statement> statements = new ArrayList<Statement>();
-                statements.put($15);
+                statements.add((Statement)$15.obj);
             
                 Method main = new Method(
                     "main",
@@ -61,35 +66,42 @@ MainClass:  CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDEN
                 );
 
                 Map<String, Method> methods = new HashMap<String, Method>();
-                methods.put(main);
+                methods.put(main.name, main);
 
                 Map<String, Var> fields = new HashMap<String, Var>();
                 
-                
-                $$ = new Class(
-                    $2,
+                $$.obj = new ClassDeclaration(
+                    $2.sval,
                     fields,
                     methods
-                );     
+                );
             }
 
 
 ClassDeclarationarationList:    ClassDeclaration {
-                                    $$ = new HashMap<String, Class>();
-                                    $$.put($1.name, $1);
+                                    HashMap<String, ClassDeclaration> classDeclList = new HashMap<String, ClassDeclaration>();
+                                    
+                                    ClassDeclaration classDecl = (ClassDeclaration)$1.obj;
+                                    classDeclList.put(classDecl.name, classDecl);
+                                    
+                                    $$.obj = classDeclList;
                                 }
                                 | ClassDeclarationarationList ClassDeclaration {
-                                    $1.put($2.name, $2);
-                                    $$ = $1;
+                                    HashMap<String, ClassDeclaration> classDeclList = (HashMap<String, ClassDeclaration>)$1.obj;
+
+                                    ClassDeclaration classDecl = (ClassDeclaration)$2.obj;
+                                    classDeclList.put(classDecl.name, classDecl);
+
+                                    $$.obj = classDeclList;
                                 }
                                 ; 
 
-ClassDeclarationarationListOptional:    { $$ = new HashMap<String, Class>(); } // empty
+ClassDeclarationarationListOptional:    { $$.obj = new HashMap<String, ClassDeclaration>(); } // empty
                                         | ClassDeclarationarationList { $$ = $1; }
                                         ;
 
 ClassDeclaration:   CLASS IDENTIFIER ClassExtendsOptional '{' VarDeclarationList MethodDeclarationList '}'  {
-                        $$ = new Class($2, $5, $6);
+                        $$.obj = new ClassDeclaration($2.sval, (Map<String, Var>)$5, (Map<String, Method>)$6);
                     }
                     ;
 
@@ -97,106 +109,133 @@ ClassExtendsOptional:   {} // empty
                         | EXTENDS IDENTIFIER { $$ = $2; }
                         ;
 
-VarDeclarationList: {$$ = new HashMap<String, Var>();} // empty
+VarDeclarationList: { $$.obj = new HashMap<String, Var>(); } // empty
                     | VarDeclarationList VarDeclaration {
-                        $1.put($2.name, $2);
-                        $$ = $1;
+                        HashMap<String, Var> varDeclList = (HashMap<String, Var>)$1.obj;
+                        Var varDecl = (Var)$2.obj;
+
+                        varDeclList.put(varDecl.name, varDecl);
+
+                        $$.obj = varDeclList;
                     }
                     ;
 
 VarDeclaration: Type IDENTIFIER ';' {
-                    $$ = new Var($1, $2);
+                    $$.obj = new Var((Type)$1.obj, $2.sval);
                 }
                 ;
 
-Type:   INT '[' ']' { $$ = Type.intArrayType; }
-        | BOOLEAN { $$ = Type.booleanType; }
-        | INT { $$ = Type.intType; }
-        | IDENTIFIER { $$ = new IndentifierType($1); }
+Type:   INT '[' ']' { $$.obj = Type.intArrayType; }
+        | BOOLEAN { $$.obj = Type.booleanType; }
+        | INT { $$.obj = Type.intType; }
+        | IDENTIFIER { $$.obj = new IdentifierType($1.sval); }
         ;
 
-MethodDeclarationList:  {$$ = new HashMap<String, MethodDeclaration>();} // empty
+MethodDeclarationList:  { $$.obj = new HashMap<String, Method>(); } // empty
                         | MethodDeclarationList MethodDeclaration {
-                            $1.put($2.name, $2);
-                            $$ = $1;
+                            Map<String, Method> methodDeclList = (Map<String, Method>)$1;
+                            Method method = (Method)$2.obj;
+
+                            methodDeclList.put(method.name, method);
+
+                            $$.obj = methodDeclList;
                         }
                         ;
 
 MethodDeclaration:  PUBLIC Type IDENTIFIER '(' ArgsListOptional ')' '{' VarDeclarationList StatementListOptional RETURN Expression ';' '}' {
-                        $$ = new MethodDeclaration($3, $2, $5, $8, $9, $11);
+                        $$.obj = new Method(
+                            $3.sval,
+                            (Type)$2.obj,
+                            (Map<String, Var>)$5.obj,
+                            (Map<String, Var>)$8.obj,
+                            (List<Statement>)$9.obj,
+                            (Expression)$11.obj
+                        );
                     }
 
-ArgsListOptional:   { $$ = new HashMap<String, Var>; } // empty
+ArgsListOptional:   { $$.obj = new HashMap<String, Var>(); } // empty
                     | ArgsList { $$ = $1; }
                     ;
 
 ArgsList:   ArgsList ',' Arg {
-                $1.put($3.name, $3);
-                $$ = $1;
+                Map<String, Var> argsList = (Map<String, Var>)$1;
+                Var var = (Var)$3.obj;
+
+                argsList.put(var.name, var);
+
+                $$.obj = argsList;
             }
             | Arg {
-                $$ = new HashMap<String, Var>;
-                $$.put($1.name, $1)
+                Map<String, Var> argsList = new HashMap<String, Var>();
+                Var var = (Var)$1.obj;
+
+                argsList.put(var.name, var);
+
+                $$.obj = argsList;
             }
             ;
 
-Arg: Type IDENTIFIER { $$ = new Var($1, $2); }
+Arg: Type IDENTIFIER { $$.obj = new Var((Type)$1.obj, $2.sval); }
 
-Statement:  '{' StatementListOptional '}' { $$ = new BlockStatement($2); }
-            | IF '(' Expression ')' Statement ELSE Statement { $$ = new IfStatement($3, $5, $7); }
-            | WHILE '(' Expression ')' Statement { $$ = new WhileStatement($3, $5); }
-            | PRINT '(' Expression ')' ';' { $$ = new PrintStatement($3); }
-            | IDENTIFIER '=' Expression ';' { $$ = new AssignStatement($1, $3); }
-            | IDENTIFIER '[' Expression ']' '=' Expression ';' { $$ = new ArrayAssignStatement($1, $3, $6); }
+Statement:  '{' StatementListOptional '}' { $$.obj = new BlockStatement((List<Statement>)$2.obj); }
+            | IF '(' Expression ')' Statement ELSE Statement { $$.obj = new IfStatement((Expression)$3.obj, (Statement)$5.obj, (Statement)$7.obj); }
+            | WHILE '(' Expression ')' Statement { $$.obj = new WhileStatement((Expression)$3.obj, (Statement)$5.obj); }
+            | PRINT '(' Expression ')' ';' { $$.obj = new PrintStatement((Expression)$3.obj); }
+            | IDENTIFIER '=' Expression ';' { $$.obj = new AssignmentStatement($1.sval, (Expression)$3.obj); }
+            | IDENTIFIER '[' Expression ']' '=' Expression ';' { $$.obj = new ArrayAssignmentStatement($1.sval, (Expression)$3.obj, (Expression)$6.obj); }
             ;
 
 StatementList:  StatementList Statement {
-                    $1.add($2);
-                    $$ = $1;
+                    List<Statement> statementList = (List<Statement>)$1;
+                    statementList.add((Statement)$2.obj);
+                    $$.obj = statementList;
                 }
                 | Statement {
-                    $$ = new ArrayList<Statement>();
-                    $$.add($1);
+                    List<Statement> statementList = new ArrayList<Statement>();
+                    statementList.add((Statement)$1.obj);
+                    $$.obj = statementList;
                 }
                 ;
 
-StatementListOptional:  { $$ = new ArrayList<Statement>(); } // empty
+StatementListOptional:  { $$.obj = new ArrayList<Statement>(); } // empty
                         | StatementList { $$ = $1; }
                         ;
 
-Expression: Expression AND Expression { $$ = new BinaryExpression($1, $2, $3); }
-            | Expression '<' Expression { $$ = new BinaryExpression($1, $2, $3); }
-            | Expression '+' Expression { $$ = new BinaryExpression($1, $2, $3); }
-            | Expression '-' Expression { $$ = new BinaryExpression($1, $2, $3); }
-            | Expression '*' Expression { $$ = new BinaryExpression($1, $2, $3); }
-            | Expression '[' Expression ']' { $$ = new ArrayAccessExpression($1, $3); }
-            | Expression '.' LENGTH { $$ = new LengthExpression($1); }
-            | Expression '.' IDENTIFIER '(' ExpressionList ')' { $$ = new CallExpression($1, $3, $5); }
-            | INTEGER { $$ = new IntegerLiteralExpression($1); }
-            | TRUE { $$ = new BooleanLiteralExpression(true); }
-            | FALSE { $$ = new BooleanLiteralExpression(false);}
-            | IDENTIFIER { $$ = new IdentifierExpression($1); }
-            | THIS { $$ = new IndentifierExpression($1); }
-            | NEW INT '[' Expression ']' { $$ = new NewArrayExpression(Type.intType, $4); }
-            | NEW IDENTIFIER '('')' { $$ = new NewObjectExpression($2); }
-            | '!' Expression { $$ = new UnaryExpression($1, $2); }
+Expression: Expression AND Expression { $$.obj = new BinaryExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
+            | Expression '<' Expression { $$.obj = new BinaryExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
+            | Expression '+' Expression { $$.obj = new BinaryExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
+            | Expression '-' Expression { $$.obj = new BinaryExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
+            | Expression '*' Expression { $$.obj = new BinaryExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
+            | Expression '[' Expression ']' { $$.obj = new ArrayAccessExpression((Expression)$1.obj, (Expression)$3.obj); }
+            | Expression '.' LENGTH { $$.obj = new LengthExpression((Expression)$1.obj); }
+            | Expression '.' IDENTIFIER '(' ExpressionList ')' { $$.obj = new MethodCallExpression((Expression)$1.obj, $3.sval, (List<Expression>)$5.obj); }
+            | INTEGER { $$.obj = new IntegerLiteralExpression((int)$1.ival); }
+            | TRUE { $$.obj = new BooleanLiteralExpression(true); }
+            | FALSE { $$.obj = new BooleanLiteralExpression(false); }
+            | IDENTIFIER { $$.obj = new IdentifierExpression($1.sval); }
+            | THIS { $$.obj = new IdentifierExpression($1.sval); }
+            | NEW INT '[' Expression ']' { $$.obj = new NewArrayExpression(Type.intType, (Expression)$4.obj); }
+            | NEW IDENTIFIER '('')' { $$.obj = new NewObjectExpression($2.sval); }
+            | '!' Expression { $$.obj = new UnaryExpression($1.sval, (Expression)$2.obj); }
             | '(' Expression ')' { $$ = $2; }
             ;
 
-ExpressionList: { $$ = new List<Expression>(); } // empty
+ExpressionList: { $$.obj = new ArrayList<Expression>(); } // empty
                 | Expression {
-                    $$ = new List<Expression>();
-                    $$.add($1);
+                    List<Expression> expressionList = new ArrayList<Expression>();
+                    expressionList.add((Expression)$1.obj);
+                    $$.obj = expressionList;
                 }
                 | ExpressionList ',' Expression {
-                    $1.add($1);
+                    List<Expression> expressions = (List<Expression>)$1.obj;
+                    expressions.add((Expression)$1.obj);
                     $$ = $1;
                 }
                 ;
 
 %%
 
-Map<String, Class> classes = new HashMap<String, Class>();
+Map<String, ClassDeclaration> classes = new HashMap<String, ClassDeclaration>();
 
 /* método de chamada do Parser via linha de comando */
 public static void main (String [] args) throws IOException {
