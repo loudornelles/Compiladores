@@ -1,0 +1,38 @@
+digraph ast {
+1[label="A"];
+2[label="fields list"];
+1 -> 2[label="fields"];
+3[label="methods"];
+1 -> 4;
+4[label="foo"];
+5[label="parameters list"];
+4 -> 5[label="parameters"];
+6[label="locals list"];
+4 -> 6[label="locals"];
+6 -> 7;
+8[label="statements list"];
+4 -> 8[label="statements"];
+4 -> 9;
+10[label="int"];
+4 -> 10[label="return type"];
+11[label="expr"];
+4 -> 11[label="return expression"];
+12[label="Test"];
+13[label="fields list"];
+12 -> 13[label="fields"];
+14[label="methods"];
+12 -> 15;
+15[label="main"];
+16[label="parameters list"];
+15 -> 16[label="parameters"];
+16 -> 17;
+18[label="locals list"];
+15 -> 18[label="locals"];
+19[label="statements list"];
+15 -> 19[label="statements"];
+15 -> 20;
+21[label="void"];
+15 -> 21[label="return type"];
+22[label="expr"];
+15 -> 22[label="return expression"];
+}

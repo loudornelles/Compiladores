@@ -10,7 +10,7 @@ public class AssignmentStatement extends Statement {
     }
 
     void validate() {
-        Type lhsType = contextMethod.getVarByIdentifer(name).type;
+        Type lhsType = contextMethod.getVarTypeByIdentifer(name);
         Type rhsType = expression.resolveType();
 
         if (!Type.matches(lhsType, rhsType)) {

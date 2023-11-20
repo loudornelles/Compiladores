@@ -11,6 +11,8 @@ public class MethodCallExpression extends Expression {
         this.expression = expression;
         this.name = name;
         this.arguments = arguments;
+
+        System.out.println("Method call expr args: " + arguments);
     }
 
     public Type resolveType() {
@@ -18,31 +20,28 @@ public class MethodCallExpression extends Expression {
 
         if (expressionReturn instanceof ClassDeclaration) {
             ClassDeclaration classDecl = (ClassDeclaration)expressionReturn;
-            Method className = classDecl.methods.get(name);
+            Method method = classDecl.methods.get(name);
 
-            if (className == null) {
-                System.out.println("Method " + name + " not found in class " + classDecl.name);
-                throw new Error();
+            if (method == null) {
+                throw new Error("Arguments mismatch in call to " + method.name);
             }
             
-            if (className.parameters.size() != arguments.size()) {
-                System.out.println("Method " + name + " in class " + classDecl.name + " has " + className.parameters.size() + " parameters, but " + arguments.size() + " arguments were given");
-                throw new Error();
+            if (method.parameters.size() != arguments.size()) {
+                throw new Error("Arguments mismatch in call to " + method.name);
             }
             
             for (int i = 0; i < arguments.size(); i++) {
                 Type argumentType = arguments.get(i).resolveType();
-                Type parameterType = className.parameters.get(i).type.resolveType();
+                Type parameterType = method.parameters.get(i).type.resolveType();
                 
                 if (!Type.matches(argumentType, parameterType)) {
-                    System.out.println("Argument " + i + " of method " + name + " in class " + classDecl.name + " has type " + parameterType + ", but " + argumentType + " was given");
-                    throw new Error();
+                    throw new Error("Arguments mismatch in call to " + method.name);
                 }
             }
-            return expression.resolveType();
+
+            return method.returnType.resolveType();
         } else {
-            System.out.println("Method " + name + " called on non-class type " + expressionReturn);
-            throw new Error();
+            throw new Error("Method " + name + " called on non-class type " + expressionReturn);
         } 
     }
 
@@ -51,6 +50,7 @@ public class MethodCallExpression extends Expression {
 
         expression.setContextMethod(contexMethod);
         for(Expression arg : arguments) {
+            System.out.println("Arg expr: " + arg);
             arg.setContextMethod(contexMethod);
         }
     }

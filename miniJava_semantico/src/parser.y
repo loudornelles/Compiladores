@@ -145,8 +145,7 @@ MethodDeclarationList:  { $$.obj = new HashMap<String, Method>(); } // empty
 
 
 MethodDeclaration:  PUBLIC Type IDENTIFIER '(' ArgsListOptional ')' '{' VarDeclarationList StatementListOptional RETURN Expression ';' '}' {
-                        System.out.println(((List<Statement>)$9.obj).size());
-                        System.out.println($11.obj);
+                        System.out.println("In method " + $3.sval + " args: " + (List<Var>)$5.obj);
                         $$.obj = new Method(
                             $3.sval,
                             (Type)$2.obj,
@@ -216,8 +215,8 @@ Expression: Expression AND Expression { $$.obj = new BooleanExpression((Expressi
             | INTEGER { $$.obj = new IntegerLiteralExpression((int)$1.ival); }
             | TRUE { $$.obj = new BooleanLiteralExpression(true); }
             | FALSE { $$.obj = new BooleanLiteralExpression(false); }
-            | IDENTIFIER { $$.obj = new IdentifierExpression($1.sval); }
-            | THIS { $$.obj = new IdentifierExpression($1.sval); }
+            | IDENTIFIER { System.out.println("Identifier expr production: " + $1.sval); $$.obj = new IdentifierExpression($1.sval); }
+            | THIS { $$.obj = new IdentifierExpression("this"); }
             | NEW INT '[' Expression ']' { $$.obj = new NewArrayExpression(Type.intType, (Expression)$4.obj); }
             | NEW IDENTIFIER '('')' { $$.obj = new NewObjectExpression($2.sval); }
             | '!' Expression { $$.obj = new UnaryExpression($1.sval, (Expression)$2.obj); }
@@ -232,8 +231,8 @@ ExpressionList: { $$.obj = new ArrayList<Expression>(); } // empty
                 }
                 | ExpressionList ',' Expression {
                     List<Expression> expressions = (List<Expression>)$1.obj;
-                    expressions.add((Expression)$2.obj);
-                    $$ = $1;
+                    expressions.add((Expression)$3.obj);
+                    $$.obj = expressions;
                 }
                 ;
 

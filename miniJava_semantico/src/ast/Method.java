@@ -39,11 +39,16 @@ public class Method {
         }
 
         if (returnExpression != null) {
+            System.out.println("Return expr is " + returnExpression);
             returnExpression.setContextMethod(this);
         }
     }
 
-    Var getVarByIdentifer(String identifier) {
+    Type getVarTypeByIdentifer(String identifier) {
+        if (identifier == "this") {
+            return this.contextClass;
+        }
+
         Var var = this.locals.get(identifier);
         
         if (var == null) {
@@ -58,7 +63,7 @@ public class Method {
             throw new Error("Identifier '" + identifier + "' does not exist.");
         }
 
-        return var;
+        return var.type;
     }
 
     void validate() {
@@ -71,7 +76,9 @@ public class Method {
         if (returnExpression != null) {
             Type returnExpresssionType = returnExpression.resolveType();
             if (!Type.matches(returnType, returnExpresssionType)) {
-                throw new Error("Return expression type mismatch");
+                System.out.println(returnType);
+                System.out.println(returnExpresssionType);
+                throw new Error("Return expression type mismatch in method: " + contextClass.name + "." + name);
             }
         }
        

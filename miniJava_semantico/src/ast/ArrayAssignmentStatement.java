@@ -12,7 +12,7 @@ public class ArrayAssignmentStatement extends Statement {
     }
 
     public void validate() {
-        Type containerType = contextMethod.getVarByIdentifer(name).type;
+        Type containerType = contextMethod.getVarTypeByIdentifer(name);
         if (!(containerType instanceof ArrayType)) {
             throw new Error("Tried using subscript operator on non-array type.");
         }
