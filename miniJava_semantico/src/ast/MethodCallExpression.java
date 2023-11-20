@@ -1,6 +1,5 @@
 package ast;
 import java.util.List;
-import java.util.Map;
 
 public class MethodCallExpression extends Expression {
     public Expression expression;
@@ -23,7 +22,7 @@ public class MethodCallExpression extends Expression {
             Method method = classDecl.methods.get(name);
 
             if (method == null) {
-                throw new Error("Arguments mismatch in call to " + method.name);
+                throw new Error("Method " + classDecl.name + "." + name + " does not exist");
             }
             
             if (method.parameters.size() != arguments.size()) {
