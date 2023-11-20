@@ -12,6 +12,7 @@ public class MethodCallExpression extends Expression {
         this.name = name;
         this.arguments = arguments;
     }
+
     public Type resolveType() {
         Type expressionReturn = expression.resolveType();
 
@@ -42,8 +43,15 @@ public class MethodCallExpression extends Expression {
         } else {
             System.out.println("Method " + name + " called on non-class type " + expressionReturn);
             throw new Error();
+        } 
+    }
+
+    public void setContextMethod(Method contexMethod) {
+        super.setContextMethod(contexMethod);
+
+        expression.setContextMethod(contexMethod);
+        for(Expression arg : arguments) {
+            arg.setContextMethod(contexMethod);
         }
-        
-        
     }
 }

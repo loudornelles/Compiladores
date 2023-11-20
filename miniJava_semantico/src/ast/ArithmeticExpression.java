@@ -9,6 +9,9 @@ public class ArithmeticExpression extends Expression {
         this.left = left;
         this.operator = operator;
         this.right = right;
+
+        left.contextMethod = contextMethod;
+        right.contextMethod = contextMethod;
     }
 
     public Type resolveType() {
@@ -20,5 +23,12 @@ public class ArithmeticExpression extends Expression {
         } else {
             throw new Error("Operands of arithmetic expression must be of type int");
         }
+    }
+
+    public void setContextMethod(Method contexMethod) {
+        super.setContextMethod(contexMethod);
+
+        left.setContextMethod(contexMethod);
+        right.setContextMethod(contexMethod);
     }
 }

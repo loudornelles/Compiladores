@@ -13,4 +13,12 @@ public class BlockStatement extends Statement {
     void validate() {
         // no validation needed
     }
+
+    public void setContextMethod(Method contexMethod) {
+        super.setContextMethod(contexMethod);
+
+        for(Statement statement : statements) {
+            statement.setContextMethod(contexMethod);
+        }
+    }
 }

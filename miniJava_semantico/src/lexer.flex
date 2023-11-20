@@ -49,8 +49,8 @@ length             { return Parser.LENGTH; }
 true               { return Parser.TRUE; }
 false              { return Parser.FALSE; }
 
-{LETTER}({LETTER}|{DIGIT})* {return Parser.IDENTIFIER;}
-{DIGIT}+                    {return Parser.INTEGER;}
+{LETTER}({LETTER}|{DIGIT})* { return Parser.IDENTIFIER; }
+{DIGIT}+                    { return Parser.INTEGER; }
 
 "{" |
 "}" |

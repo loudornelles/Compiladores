@@ -14,4 +14,11 @@ public class WhileStatement extends Statement {
             throw new Error("While statements only allow boolean conditions.");
         }
     }
+
+    public void setContextMethod(Method contexMethod) {
+        super.setContextMethod(contexMethod);
+
+        condition.setContextMethod(contexMethod);
+        body.setContextMethod(contexMethod);
+    }
 }

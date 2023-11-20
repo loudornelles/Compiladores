@@ -16,4 +16,10 @@ public class UnaryExpression extends Expression {
             throw new Error("Unsupported operator'" + operator + "'");
         }
     }
+
+    public void setContextMethod(Method contexMethod) {
+        super.setContextMethod(contexMethod);
+
+        expression.setContextMethod(contexMethod);
+    }
 }

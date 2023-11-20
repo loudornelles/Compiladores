@@ -10,4 +10,10 @@ public class LengthExpression extends Expression {
     public Type resolveType() {
         return Type.intType;
     }
+
+    public void setContextMethod(Method contexMethod) {
+        super.setContextMethod(contexMethod);
+
+        expression.setContextMethod(contexMethod);
+    }
 }

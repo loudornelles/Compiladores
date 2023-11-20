@@ -5,6 +5,7 @@
   import java.util.List;
   import java.util.ArrayList;
   import ast.*;
+  import visualization.*;
 %}
 
 %token CLASS
@@ -44,7 +45,7 @@
 Goal:   MainClass ClassDeclarationarationListOptional {
             classes = (Map<String, ClassDeclaration>)$2.obj;
             ClassDeclaration mainClass = (ClassDeclaration)$1.obj;
-            classes.put(mainClass.name, mainClass);
+            putIfAbsentOrThrow(classes, mainClass.name, mainClass);
         }
         ;
 
@@ -66,10 +67,10 @@ MainClass:  CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDEN
                 );
 
                 Map<String, Method> methods = new HashMap<String, Method>();
-                methods.put(main.name, main);
+                putIfAbsentOrThrow(methods, main.name, main);
 
                 Map<String, Var> fields = new HashMap<String, Var>();
-                
+
                 $$.obj = new ClassDeclaration(
                     $2.sval,
                     fields,
@@ -82,7 +83,7 @@ ClassDeclarationarationList:    ClassDeclaration {
                                     HashMap<String, ClassDeclaration> classDeclList = new HashMap<String, ClassDeclaration>();
                                     
                                     ClassDeclaration classDecl = (ClassDeclaration)$1.obj;
-                                    classDeclList.put(classDecl.name, classDecl);
+                                    putIfAbsentOrThrow(classDeclList, classDecl.name, classDecl);
                                     
                                     $$.obj = classDeclList;
                                 }
@@ -90,7 +91,7 @@ ClassDeclarationarationList:    ClassDeclaration {
                                     HashMap<String, ClassDeclaration> classDeclList = (HashMap<String, ClassDeclaration>)$1.obj;
 
                                     ClassDeclaration classDecl = (ClassDeclaration)$2.obj;
-                                    classDeclList.put(classDecl.name, classDecl);
+                                    putIfAbsentOrThrow(classDeclList, classDecl.name, classDecl);
 
                                     $$.obj = classDeclList;
                                 }
@@ -114,7 +115,7 @@ VarDeclarationList: { $$.obj = new HashMap<String, Var>(); } // empty
                         HashMap<String, Var> varDeclList = (HashMap<String, Var>)$1.obj;
                         Var varDecl = (Var)$2.obj;
 
-                        varDeclList.put(varDecl.name, varDecl);
+                        putIfAbsentOrThrow(varDeclList, varDecl.name, varDecl);
 
                         $$.obj = varDeclList;
                     }
@@ -136,13 +137,16 @@ MethodDeclarationList:  { $$.obj = new HashMap<String, Method>(); } // empty
                             Map<String, Method> methodDeclList = (Map<String, Method>)$1.obj;
                             Method method = (Method)$2.obj;
 
-                            methodDeclList.put(method.name, method);
+                            putIfAbsentOrThrow(methodDeclList, method.name, method);
 
                             $$.obj = methodDeclList;
                         }
                         ;
 
+
 MethodDeclaration:  PUBLIC Type IDENTIFIER '(' ArgsListOptional ')' '{' VarDeclarationList StatementListOptional RETURN Expression ';' '}' {
+                        System.out.println(((List<Statement>)$9.obj).size());
+                        System.out.println($11.obj);
                         $$.obj = new Method(
                             $3.sval,
                             (Type)$2.obj,
@@ -197,8 +201,8 @@ StatementList:  StatementList Statement {
                 }
                 ;
 
-StatementListOptional:  { $$.obj = new ArrayList<Statement>(); } // empty
-                        | StatementList { $$ = $1; }
+StatementListOptional:  { System.out.println("hello"); $$.obj = new ArrayList<Statement>(); } // empty
+                        | StatementList { System.out.println("hello2"); $$ = $1; }
                         ;
 
 Expression: Expression AND Expression { $$.obj = new BooleanExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
@@ -243,6 +247,17 @@ public static void main (String [] args) throws IOException {
     IdentifierType.contextGlobal = classes;
 
     yyparser.yyparse(); // dispara o processo de análise sintática e léxica
+
+    for(ClassDeclaration classDecl : classes.values()) {
+        classDecl.globalContext = classes;
+        classDecl.validate();
+    }
+
+    System.out.println("main class name: " + ((ClassDeclaration)classes.values().toArray()[0]).name);
+
+    GraphGenerator graph = new GraphGenerator();
+    graph.generateForClasses(classes);
+    System.out.println(graph.output);
 }
 
 /* construtor da classe Parser gerada pleo BYACC */
@@ -258,8 +273,15 @@ private Yylex lexer;
 private int yylex() {
     int retVal = -1;
     try {
-        yylval = new ParserVal(0); //zera o valor do token
-        retVal = lexer.yylex(); //lê a entrada do arquivo e retorna um token
+        int token = lexer.yylex();
+        if (token == IDENTIFIER) {
+            yylval = new ParserVal(lexer.yytext());
+        } else if (token == INTEGER) {
+            yylval = new ParserVal(Integer.parseInt(lexer.yytext()));
+        } else {
+            yylval = new ParserVal(0);
+        }
+        retVal = token;
     } catch (IOException e) {
         System.err.println("IO Error:" + e);
     }
@@ -270,4 +292,12 @@ private int yylex() {
 public void yyerror (String error) {
     System.err.println("Erro: " + error + " na linha " + lexer.getLine());
     System.err.println("Entrada rejeitada");
+}
+
+<T> void putIfAbsentOrThrow(Map<String, T> map, String key, T value) {
+    if (map.containsKey(key)) {
+        throw new Error(key + " already declared");
+    } else {
+        map.put(key, value);
+    }
 }

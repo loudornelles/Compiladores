@@ -1,14 +1,13 @@
-class Factorial{
+class Test {
     public static void main(String[] args){
-	   {}
+        System.out.println(0);
     }
 }
 
-class Other {
-    public int Start(int sz){
+class A {
+    public int foo() {
         int a;
-        a = 0;
-
-        return 12;
+        a = 10;
+        return a;
     }
 }

@@ -17,4 +17,10 @@ public class AssignmentStatement extends Statement {
             throw new Error("Incompatible types at assignment.");
         }
     }
+
+    public void setContextMethod(Method contexMethod) {
+        super.setContextMethod(contexMethod);
+
+        expression.setContextMethod(contexMethod);
+    }
 }

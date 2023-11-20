@@ -27,4 +27,11 @@ public class ArrayAssignmentStatement extends Statement {
             throw new Error("Incompatible types in array assignment.");
         }
     }
+
+    public void setContextMethod(Method contexMethod) {
+        super.setContextMethod(contexMethod);
+
+        index.setContextMethod(contexMethod);
+        expression.setContextMethod(contexMethod);
+    }
 }

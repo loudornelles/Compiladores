@@ -17,4 +17,11 @@ public class ArrayAccessExpression extends Expression {
             throw new Error("Not an array.");
         }
     }
+
+    public void setContextMethod(Method contexMethod) {
+        super.setContextMethod(contexMethod);
+
+        expression.setContextMethod(contexMethod);
+        index.setContextMethod(contexMethod);
+    }
 }

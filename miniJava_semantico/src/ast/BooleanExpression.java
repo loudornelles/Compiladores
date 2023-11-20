@@ -21,4 +21,11 @@ public class BooleanExpression extends Expression {
             throw new Error("Operands of boolean expression must be of type boolean");
         }
     }
+
+    public void setContextMethod(Method contexMethod) {
+        super.setContextMethod(contexMethod);
+
+        left.setContextMethod(contexMethod);
+        right.setContextMethod(contexMethod);
+    }
 }

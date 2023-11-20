@@ -16,4 +16,12 @@ public class IfStatement extends Statement {
             throw new Error("If statements only allow boolean conditions.");
         }
     }
+
+    public void setContextMethod(Method contexMethod) {
+        super.setContextMethod(contexMethod);
+
+        condition.setContextMethod(contexMethod);
+        thenStatement.setContextMethod(contexMethod);
+        elseStatement.setContextMethod(contexMethod);
+    }
 }

@@ -23,6 +23,7 @@ public class Method {
             Map<String, Var> locals,
             List<Statement> statements,
             Expression returnExpression) {
+        this.name = name;
         this.returnType = returnType;
         this.parameters = parameters;
         this.locals = locals;
@@ -32,23 +33,55 @@ public class Method {
         for (Var parameter : parameters) {
             parametersByName.put(parameter.name, parameter);
         }
+
+        for(Statement statement : statements) {
+            statement.setContextMethod(this);
+        }
+
+        if (returnExpression != null) {
+            returnExpression.setContextMethod(this);
+        }
     }
 
     Var getVarByIdentifer(String identifier) {
-        Var var = this.locals.get(this.name);
+        Var var = this.locals.get(identifier);
         
         if (var == null) {
-            var = this.parametersByName.get(this.name);
+            var = this.parametersByName.get(identifier);
         }
 
         if (var == null) {
-            var = this.contextClass.fields.get(this.name);
+            var = this.contextClass.fields.get(identifier);
         }
 
         if (var == null) {
-            throw new Error("Identifier '" + this.name + "' does not exist.");
+            throw new Error("Identifier '" + identifier + "' does not exist.");
         }
 
         return var;
+    }
+
+    void validate() {
+        System.out.println("validating method " + name);
+        System.out.println("statements length " + statements.size());
+        for(Statement statement : statements) {
+            statement.validate();
+        }
+
+        if (returnExpression != null) {
+            Type returnExpresssionType = returnExpression.resolveType();
+            if (!Type.matches(returnType, returnExpresssionType)) {
+                throw new Error("Return expression type mismatch");
+            }
+        }
+       
+
+        for(Var param : parameters) {
+            param.validate();
+        }
+
+        for(Var local : locals.values()) {
+            local.validate();
+        }
     }
 }

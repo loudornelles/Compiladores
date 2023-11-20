@@ -8,4 +8,8 @@ public class Var {
         this.type = type;
         this.name = name;
     }
+
+    void validate() {
+        type.resolveType();
+    }
 }

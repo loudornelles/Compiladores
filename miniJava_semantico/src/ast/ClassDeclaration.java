@@ -14,5 +14,19 @@ public class ClassDeclaration extends Type {
         this.name = name;
         this.fields = fields;
         this.methods = methods;
+
+        for (Method method : methods.values()) {
+            method.contextClass = this;
+        }
+    }
+
+    public void validate() {
+        for(Method method : methods.values()) {
+            method.validate();
+        }
+
+        for(Var field : fields.values()) {
+            field.validate();
+        }
     }
 }

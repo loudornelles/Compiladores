@@ -12,4 +12,10 @@ public class NewArrayExpression extends Expression {
     public Type resolveType() {
         return new ArrayType(type);
     }
+
+    public void setContextMethod(Method contexMethod) {
+        super.setContextMethod(contexMethod);
+
+        size.setContextMethod(contexMethod);
+    }
 }

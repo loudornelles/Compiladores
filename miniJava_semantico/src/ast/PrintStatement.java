@@ -8,6 +8,12 @@ public class PrintStatement extends Statement {
     }
 
     void validate() {
-        // print statements accept any type of argument
+        expression.resolveType(); // make sure the type is valid
+    }
+
+    public void setContextMethod(Method contexMethod) {
+        super.setContextMethod(contexMethod);
+
+        expression.setContextMethod(contexMethod);
     }
 }
