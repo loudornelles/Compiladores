@@ -1,12 +1,14 @@
 // Method Parameter Shadowing:
 
-public class Err8 {
+class Err8 {
     public static void main(String[] a) {
-        int x = 10;
-        myMethod(x);
+        System.out.println(a);
     }
+}
 
-    public static void myMethod(int x) {
-        int x = 20;
+class Foo {
+    public int myMethod(int x) {
+        int x;
+        return x;
     }
 }

@@ -15,7 +15,17 @@ public class BooleanExpression extends Expression {
         Type leftType = left.resolveType();
         Type rightType = right.resolveType();
 
-        if (leftType == Type.booleanType && rightType == Type.booleanType) {
+        Type operandTypes;
+
+        if (operator == "&&") {
+            operandTypes = Type.booleanType;
+        } else if (operator == "<") {
+            operandTypes = Type.intType;
+        } else {
+            throw new Error("Operator '" + operator + "' not supported");
+        }
+
+        if (leftType == operandTypes && rightType == operandTypes) {
             return Type.booleanType;
         } else {
             throw new Error("Operands of boolean expression must be of type boolean");

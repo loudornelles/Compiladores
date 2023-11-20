@@ -204,8 +204,8 @@ StatementListOptional:  { System.out.println("hello"); $$.obj = new ArrayList<St
                         | StatementList { System.out.println("hello2"); $$ = $1; }
                         ;
 
-Expression: Expression AND Expression { $$.obj = new BooleanExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
-            | Expression '<' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
+Expression: Expression AND Expression { $$.obj = new BooleanExpression((Expression)$1.obj, "&&", (Expression)$3.obj); }
+            | Expression '<' Expression { $$.obj = new BooleanExpression((Expression)$1.obj, "<", (Expression)$3.obj); }
             | Expression '+' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
             | Expression '-' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
             | Expression '*' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
@@ -256,7 +256,7 @@ public static void main (String [] args) throws IOException {
 
     GraphGenerator graph = new GraphGenerator();
     graph.generateForClasses(classes);
-    System.out.println(graph.output);
+    // System.out.println(graph.output);
 }
 
 /* construtor da classe Parser gerada pleo BYACC */

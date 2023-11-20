@@ -89,6 +89,11 @@ public class Method {
 
         for(Var local : locals.values()) {
             local.validate();
+            for (Var param : parameters) {
+                if (param.name.equals(local.name)) {
+                    throw new Error("Local variable '" + local.name + "' has the same name as one of the method's parameters.");
+                }
+            }
         }
     }
 }
