@@ -7,5 +7,13 @@
 sh build_all.sh
 
 # run
-sh run.sh tests/BubbleSort.java
+sh run.sh ../tests/BubbleSort.java
+
+
+sh build_all.sh
+cd out
+java Parser ../tests/Err1.java
 ```
+
+
+

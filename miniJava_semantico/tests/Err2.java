@@ -1,7 +1,7 @@
 // Incorrect Parameters:
 
 class Err2 {
-    public static void main() {
+    public static void main(String[] a) {
         MyClass obj = new MyClass();
         obj.someMethod("string", 123);
     }

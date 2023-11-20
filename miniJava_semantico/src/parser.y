@@ -205,7 +205,7 @@ StatementListOptional:  { System.out.println("hello"); $$.obj = new ArrayList<St
                         ;
 
 Expression: Expression AND Expression { $$.obj = new BooleanExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
-            | Expression '<' Expression { $$.obj = new BooleanExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
+            | Expression '<' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
             | Expression '+' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
             | Expression '-' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
             | Expression '*' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
