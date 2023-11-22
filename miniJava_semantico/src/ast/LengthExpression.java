@@ -8,7 +8,11 @@ public class LengthExpression extends Expression {
     }
 
     public Type resolveType() {
-        return Type.intType;
+        if (expression.resolveType() == Type.intArrayType || expression.resolveType() == Type.stringArrayType) {
+            return Type.intType;
+        } else {
+            throw new Error("Invalid .length access");
+        }
     }
 
     public void setContextMethod(Method contexMethod) {
