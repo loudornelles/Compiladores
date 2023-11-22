@@ -4,11 +4,12 @@ class MainClass {
     }
 }
 
-class TestLengthOnCorrectType {
+class LengthOnCorrectType {
     public int a() {
         int[] arr;
+        int len;
         arr = new int[5];
-        int len = arr.length; // valid
+        len = arr.length; // valid
         return 0;
     }
 }

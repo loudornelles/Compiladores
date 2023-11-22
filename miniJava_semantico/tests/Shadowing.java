@@ -5,14 +5,7 @@ class MainClass {
 }
 
 class Shadowing {
-    public String[] main(String[] a) {
-        System.out.println(a);
-        return a;
-    }
-}
-
-class Foo {
-    public int myMethod(int x) {
+    public int c(int x) {
         int x;
         return x;
     }

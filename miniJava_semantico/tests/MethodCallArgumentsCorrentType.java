@@ -10,10 +10,11 @@ class MethodCallArgumentsCorrectType {
     }
 
     public int b() {
-        String x;
+        int x;
         int result;
 
-        result = a(x);
+        x = 0;
+        result = this.a(x);
 
         return 0;
     }

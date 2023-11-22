@@ -4,12 +4,11 @@ class MainClass {
     }
 }
 
-
 class ArrayAssignmentCorrectIndexType {
     public int foo() {
         int[] arr;
         arr = new int[5];
-        arr[true] = 42; // valid
+        arr[3] = 42; // valid
         return 0;
     }
 }

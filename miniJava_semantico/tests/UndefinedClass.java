@@ -5,8 +5,9 @@ class MainClass {
 }
 
 class UndefinedClass {
-    public UndefinedClass a(String[] a) {
-        UndefinedClass obj = new UndefinedClass();
-        return obj;
+    public int a() {
+        UndefinedClass obj;
+        obj = new UndefinedClass1(); // Error: Class UndefinedClass not found
+        return 0;
     }
 }

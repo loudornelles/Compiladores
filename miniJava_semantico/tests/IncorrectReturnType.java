@@ -5,12 +5,11 @@ class MainClass {
 }
 
 class IncorrectReturnType {
-    public int a(String[] a) {
-        int result = myMethod(); // Error: Incompatible types, int cannot be assigned a void value
-        return 0;
+    public int a() {
+        return this.myMethod();
     }
 
-    public String myMethod() {
-        return "hello";
+    public boolean myMethod() {
+        return false;
     }
 }

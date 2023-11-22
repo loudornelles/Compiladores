@@ -4,7 +4,7 @@ class MainClass {
     }
 }
 
-class NoFieldsWithSameName {
+class MethodCallArgumentsIncorrectOrder {
     public int a(int x, boolean y) {
         return 0;
     }
@@ -12,7 +12,7 @@ class NoFieldsWithSameName {
     public int b() {
         int result;
 
-        result = a(true, 0);
+        result = this.a(true, 0);
         return 0;
     }
 }

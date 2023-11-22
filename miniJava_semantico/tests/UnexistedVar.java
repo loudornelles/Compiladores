@@ -5,8 +5,9 @@ class MainClass {
 }
 
 class UnexistedVar {
-    public int a(String[] a) {
-        int x = y; // Error: Variable y not found
-        return x;
+    public int a() {
+        int x;
+        x = y; // Error: Variable y not found
+        return 0;
     }
 }

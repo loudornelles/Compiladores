@@ -4,8 +4,7 @@ class MainClass {
     }
 }
 
-
-public class NoLocalVariableWithSameNameAsParameter {
+class NoLocalVariableWithSameNameAsParameter {
     public int a(int x) {
         int x; // should error
         return 0;

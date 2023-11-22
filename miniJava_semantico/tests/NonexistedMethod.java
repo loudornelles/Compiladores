@@ -4,16 +4,16 @@ class MainClass {
     }
 }
 
-class NonexistedMethod {
-    public int a(String[] a) {
-        MyClass obj = new MyClass();
-        obj.someMethod("string", 123);
+class MyClass {
+    public int c() {
         return 0;
     }
 }
 
-class MyClass {
-    public int b(String[] a) {
-        return 0;
+class NonexistedMethod {
+    public int a() {
+        MyClass obj;
+        obj = new MyClass();
+        return obj.b();
     }
 }

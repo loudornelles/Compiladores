@@ -4,11 +4,12 @@ class MainClass {
     }
 }
 
-class TestLengthReturnType {
+class LengthReturnType {
     public int a() {
         int[] arr;
+        boolean len;
         arr = new int[5];
-        boolean len = arr.length; // Error: Incompatible types
+        len = arr.length; // Error: Incompatible types
         return 0;
     }
 }

@@ -4,10 +4,12 @@ class MainClass {
     }
 }
 
-class TestLengthOnIncorrectType {
+class LengthOnIncorrectType {
     public int a() {
         int x;
-        int len = x.length; // Error: Only arrays have a length property
+        int len;
+        x = 0;
+        len = x.length;// Error: Only arrays have a length property
         return 0;
     }
 }
