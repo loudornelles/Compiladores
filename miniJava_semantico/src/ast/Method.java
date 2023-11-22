@@ -63,7 +63,7 @@ public class Method {
             throw new Error("Identifier '" + identifier + "' does not exist.");
         }
 
-        return var.type;
+        return var.type.resolveType();
     }
 
     void validate() {

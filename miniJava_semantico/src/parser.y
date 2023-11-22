@@ -206,9 +206,9 @@ StatementListOptional:  { System.out.println("hello"); $$.obj = new ArrayList<St
 
 Expression: Expression AND Expression { $$.obj = new BooleanExpression((Expression)$1.obj, "&&", (Expression)$3.obj); }
             | Expression '<' Expression { $$.obj = new BooleanExpression((Expression)$1.obj, "<", (Expression)$3.obj); }
-            | Expression '+' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
-            | Expression '-' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
-            | Expression '*' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, $2.sval, (Expression)$3.obj); }
+            | Expression '+' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, "+", (Expression)$3.obj); }
+            | Expression '-' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, "-", (Expression)$3.obj); }
+            | Expression '*' Expression { $$.obj = new ArithmeticExpression((Expression)$1.obj, "*", (Expression)$3.obj); }
             | Expression '[' Expression ']' { $$.obj = new ArrayAccessExpression((Expression)$1.obj, (Expression)$3.obj); }
             | Expression '.' LENGTH { $$.obj = new LengthExpression((Expression)$1.obj); }
             | Expression '.' IDENTIFIER '(' ExpressionList ')' { $$.obj = new MethodCallExpression((Expression)$1.obj, $3.sval, (List<Expression>)$5.obj); }
@@ -243,9 +243,10 @@ static Map<String, ClassDeclaration> classes = new HashMap<String, ClassDeclarat
 /* método de chamada do Parser via linha de comando */
 public static void main (String [] args) throws IOException {
     Parser yyparser = new Parser(new FileReader(args[0]));
-    IdentifierType.contextGlobal = classes;
-
+    
     yyparser.yyparse(); // dispara o processo de análise sintática e léxica
+
+    IdentifierType.contextGlobal = classes;
 
     for(ClassDeclaration classDecl : classes.values()) {
         classDecl.globalContext = classes;

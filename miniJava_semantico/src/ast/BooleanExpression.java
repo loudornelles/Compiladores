@@ -9,6 +9,9 @@ public class BooleanExpression extends Expression {
         this.left = left;
         this.operator = operator;
         this.right = right;
+
+        System.out.println("OPERATOR IS: " + operator);
+
     }
 
     public Type resolveType() {
@@ -17,9 +20,10 @@ public class BooleanExpression extends Expression {
 
         Type operandTypes;
 
-        if (operator == "&&") {
+
+        if (operator.equals("&&")) {
             operandTypes = Type.booleanType;
-        } else if (operator == "<") {
+        } else if (operator.equals("<")) {
             operandTypes = Type.intType;
         } else {
             throw new Error("Operator '" + operator + "' not supported");

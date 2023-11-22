@@ -10,7 +10,13 @@ public class NewArrayExpression extends Expression {
     }
 
     public Type resolveType() {
-        return new ArrayType(type);
+        if (type == Type.stringType) {
+            return Type.stringArrayType;
+        } else if (type == Type.intType) {
+            return Type.intArrayType;
+        } else {
+            throw new Error("Only int[] and string[] arrays are supported. string[] is only supported in main method though.");
+        }
     }
 
     public void setContextMethod(Method contexMethod) {

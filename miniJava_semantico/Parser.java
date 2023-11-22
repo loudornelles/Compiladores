@@ -427,9 +427,10 @@ static Map<String, ClassDeclaration> classes = new HashMap<String, ClassDeclarat
 /* método de chamada do Parser via linha de comando */
 public static void main (String [] args) throws IOException {
     Parser yyparser = new Parser(new FileReader(args[0]));
-    IdentifierType.contextGlobal = classes;
-
+    
     yyparser.yyparse(); // dispara o processo de análise sintática e léxica
+
+    IdentifierType.contextGlobal = classes;
 
     for(ClassDeclaration classDecl : classes.values()) {
         classDecl.globalContext = classes;
@@ -440,7 +441,7 @@ public static void main (String [] args) throws IOException {
 
     GraphGenerator graph = new GraphGenerator();
     graph.generateForClasses(classes);
-    System.out.println(graph.output);
+    // System.out.println(graph.output);
 }
 
 /* construtor da classe Parser gerada pleo BYACC */
@@ -484,7 +485,7 @@ public void yyerror (String error) {
         map.put(key, value);
     }
 }
-//#line 416 "Parser.java"
+//#line 417 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -871,23 +872,23 @@ case 34:
 break;
 case 35:
 //#line 207 "src/parser.y"
-{ yyval.obj = new BooleanExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
+{ yyval.obj = new BooleanExpression((Expression)val_peek(2).obj, "&&", (Expression)val_peek(0).obj); }
 break;
 case 36:
 //#line 208 "src/parser.y"
-{ yyval.obj = new BooleanExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
+{ yyval.obj = new BooleanExpression((Expression)val_peek(2).obj, "<", (Expression)val_peek(0).obj); }
 break;
 case 37:
 //#line 209 "src/parser.y"
-{ yyval.obj = new ArithmeticExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
+{ yyval.obj = new ArithmeticExpression((Expression)val_peek(2).obj, "+", (Expression)val_peek(0).obj); }
 break;
 case 38:
 //#line 210 "src/parser.y"
-{ yyval.obj = new ArithmeticExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
+{ yyval.obj = new ArithmeticExpression((Expression)val_peek(2).obj, "-", (Expression)val_peek(0).obj); }
 break;
 case 39:
 //#line 211 "src/parser.y"
-{ yyval.obj = new ArithmeticExpression((Expression)val_peek(2).obj, val_peek(1).sval, (Expression)val_peek(0).obj); }
+{ yyval.obj = new ArithmeticExpression((Expression)val_peek(2).obj, "*", (Expression)val_peek(0).obj); }
 break;
 case 40:
 //#line 212 "src/parser.y"
@@ -957,7 +958,7 @@ case 54:
                     yyval.obj = expressions;
                 }
 break;
-//#line 884 "Parser.java"
+//#line 885 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

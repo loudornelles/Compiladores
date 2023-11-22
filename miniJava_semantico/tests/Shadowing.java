@@ -1,8 +1,13 @@
-// Method Parameter Shadowing:
-
-class Err8 {
+class MainClass {
     public static void main(String[] a) {
+        System.out.println(0);
+    }
+}
+
+class Shadowing {
+    public String[] main(String[] a) {
         System.out.println(a);
+        return a;
     }
 }
 
