@@ -9,9 +9,6 @@ public class BooleanExpression extends Expression {
         this.left = left;
         this.operator = operator;
         this.right = right;
-
-        System.out.println("OPERATOR IS: " + operator);
-
     }
 
     public Type resolveType() {

@@ -10,8 +10,6 @@ public class MethodCallExpression extends Expression {
         this.expression = expression;
         this.name = name;
         this.arguments = arguments;
-
-        System.out.println("Method call expr args: " + arguments);
     }
 
     public Type resolveType() {
@@ -49,7 +47,6 @@ public class MethodCallExpression extends Expression {
 
         expression.setContextMethod(contexMethod);
         for(Expression arg : arguments) {
-            System.out.println("Arg expr: " + arg);
             arg.setContextMethod(contexMethod);
         }
     }
