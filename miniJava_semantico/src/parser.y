@@ -5,7 +5,6 @@
   import java.util.List;
   import java.util.ArrayList;
   import ast.*;
-  import visualization.*;
 %}
 
 %token CLASS
@@ -145,7 +144,6 @@ MethodDeclarationList:  { $$.obj = new HashMap<String, Method>(); } // empty
 
 
 MethodDeclaration:  PUBLIC Type IDENTIFIER '(' ArgsListOptional ')' '{' VarDeclarationList StatementListOptional RETURN Expression ';' '}' {
-                        System.out.println("In method " + $3.sval + " args: " + (List<Var>)$5.obj);
                         $$.obj = new Method(
                             $3.sval,
                             (Type)$2.obj,
@@ -200,8 +198,8 @@ StatementList:  StatementList Statement {
                 }
                 ;
 
-StatementListOptional:  { System.out.println("hello"); $$.obj = new ArrayList<Statement>(); } // empty
-                        | StatementList { System.out.println("hello2"); $$ = $1; }
+StatementListOptional:  { $$.obj = new ArrayList<Statement>(); } // empty
+                        | StatementList { $$ = $1; }
                         ;
 
 Expression: Expression AND Expression { $$.obj = new BooleanExpression((Expression)$1.obj, "&&", (Expression)$3.obj); }
@@ -215,7 +213,7 @@ Expression: Expression AND Expression { $$.obj = new BooleanExpression((Expressi
             | INTEGER { $$.obj = new IntegerLiteralExpression((int)$1.ival); }
             | TRUE { $$.obj = new BooleanLiteralExpression(true); }
             | FALSE { $$.obj = new BooleanLiteralExpression(false); }
-            | IDENTIFIER { System.out.println("Identifier expr production: " + $1.sval); $$.obj = new IdentifierExpression($1.sval); }
+            | IDENTIFIER { $$.obj = new IdentifierExpression($1.sval); }
             | THIS { $$.obj = new IdentifierExpression("this"); }
             | NEW INT '[' Expression ']' { $$.obj = new NewArrayExpression(Type.intType, (Expression)$4.obj); }
             | NEW IDENTIFIER '('')' { $$.obj = new NewObjectExpression($2.sval); }
@@ -253,11 +251,7 @@ public static void main (String [] args) throws IOException {
         classDecl.validate();
     }
 
-    System.out.println("main class name: " + ((ClassDeclaration)classes.values().toArray()[0]).name);
-
-    GraphGenerator graph = new GraphGenerator();
-    graph.generateForClasses(classes);
-    // System.out.println(graph.output);
+    System.out.println("Semantic verification success");
 }
 
 /* construtor da classe Parser gerada pleo BYACC */

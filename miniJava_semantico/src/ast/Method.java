@@ -39,7 +39,6 @@ public class Method {
         }
 
         if (returnExpression != null) {
-            System.out.println("Return expr is " + returnExpression);
             returnExpression.setContextMethod(this);
         }
     }
@@ -67,8 +66,6 @@ public class Method {
     }
 
     void validate() {
-        System.out.println("validating method " + name);
-        System.out.println("statements length " + statements.size());
         for(Statement statement : statements) {
             statement.validate();
         }
@@ -76,8 +73,6 @@ public class Method {
         if (returnExpression != null) {
             Type returnExpresssionType = returnExpression.resolveType();
             if (!Type.matches(returnType, returnExpresssionType)) {
-                System.out.println(returnType);
-                System.out.println(returnExpresssionType);
                 throw new Error("Return expression type mismatch in method: " + contextClass.name + "." + name);
             }
         }

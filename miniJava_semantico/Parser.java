@@ -23,8 +23,7 @@
   import java.util.List;
   import java.util.ArrayList;
   import ast.*;
-  import visualization.*;
-//#line 25 "Parser.java"
+//#line 24 "Parser.java"
 
 
 
@@ -420,7 +419,7 @@ final static String yyrule[] = {
 "ExpressionList : ExpressionList ',' Expression",
 };
 
-//#line 240 "src/parser.y"
+//#line 238 "src/parser.y"
 
 static Map<String, ClassDeclaration> classes = new HashMap<String, ClassDeclaration>();
 
@@ -437,11 +436,7 @@ public static void main (String [] args) throws IOException {
         classDecl.validate();
     }
 
-    System.out.println("main class name: " + ((ClassDeclaration)classes.values().toArray()[0]).name);
-
-    GraphGenerator graph = new GraphGenerator();
-    graph.generateForClasses(classes);
-    // System.out.println(graph.output);
+    System.out.println("Semantic verification success");
 }
 
 /* construtor da classe Parser gerada pleo BYACC */
@@ -485,7 +480,7 @@ public void yyerror (String error) {
         map.put(key, value);
     }
 }
-//#line 417 "Parser.java"
+//#line 412 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -640,7 +635,7 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 45 "src/parser.y"
+//#line 44 "src/parser.y"
 {
             classes = (Map<String, ClassDeclaration>)val_peek(0).obj;
             ClassDeclaration mainClass = (ClassDeclaration)val_peek(1).obj;
@@ -648,7 +643,7 @@ case 1:
         }
 break;
 case 2:
-//#line 52 "src/parser.y"
+//#line 51 "src/parser.y"
 {
                 List<Var> parameters = new ArrayList<Var>();
                 Var var = new Var(Type.stringArrayType, val_peek(5).sval);
@@ -679,7 +674,7 @@ case 2:
             }
 break;
 case 3:
-//#line 82 "src/parser.y"
+//#line 81 "src/parser.y"
 {
                                     HashMap<String, ClassDeclaration> classDeclList = new HashMap<String, ClassDeclaration>();
                                     
@@ -690,7 +685,7 @@ case 3:
                                 }
 break;
 case 4:
-//#line 90 "src/parser.y"
+//#line 89 "src/parser.y"
 {
                                     HashMap<String, ClassDeclaration> classDeclList = (HashMap<String, ClassDeclaration>)val_peek(1).obj;
 
@@ -701,33 +696,33 @@ case 4:
                                 }
 break;
 case 5:
-//#line 100 "src/parser.y"
+//#line 99 "src/parser.y"
 { yyval.obj = new HashMap<String, ClassDeclaration>(); }
 break;
 case 6:
-//#line 101 "src/parser.y"
+//#line 100 "src/parser.y"
 { yyval = val_peek(0); }
 break;
 case 7:
-//#line 104 "src/parser.y"
+//#line 103 "src/parser.y"
 {
                         yyval.obj = new ClassDeclaration(val_peek(5).sval, (Map<String, Var>)val_peek(2).obj, (Map<String, Method>)val_peek(1).obj);
                     }
 break;
 case 8:
-//#line 109 "src/parser.y"
+//#line 108 "src/parser.y"
 {}
 break;
 case 9:
-//#line 110 "src/parser.y"
+//#line 109 "src/parser.y"
 { yyval = val_peek(0); }
 break;
 case 10:
-//#line 113 "src/parser.y"
+//#line 112 "src/parser.y"
 { yyval.obj = new HashMap<String, Var>(); }
 break;
 case 11:
-//#line 114 "src/parser.y"
+//#line 113 "src/parser.y"
 {
                         HashMap<String, Var> varDeclList = (HashMap<String, Var>)val_peek(1).obj;
                         Var varDecl = (Var)val_peek(0).obj;
@@ -738,33 +733,33 @@ case 11:
                     }
 break;
 case 12:
-//#line 124 "src/parser.y"
+//#line 123 "src/parser.y"
 {
                     yyval.obj = new Var((Type)val_peek(2).obj, val_peek(1).sval);
                 }
 break;
 case 13:
-//#line 129 "src/parser.y"
+//#line 128 "src/parser.y"
 { yyval.obj = Type.intArrayType; }
 break;
 case 14:
-//#line 130 "src/parser.y"
+//#line 129 "src/parser.y"
 { yyval.obj = Type.booleanType; }
 break;
 case 15:
-//#line 131 "src/parser.y"
+//#line 130 "src/parser.y"
 { yyval.obj = Type.intType; }
 break;
 case 16:
-//#line 132 "src/parser.y"
+//#line 131 "src/parser.y"
 { yyval.obj = new IdentifierType(val_peek(0).sval); }
 break;
 case 17:
-//#line 135 "src/parser.y"
+//#line 134 "src/parser.y"
 { yyval.obj = new HashMap<String, Method>(); }
 break;
 case 18:
-//#line 136 "src/parser.y"
+//#line 135 "src/parser.y"
 {
                             Map<String, Method> methodDeclList = (Map<String, Method>)val_peek(1).obj;
                             Method method = (Method)val_peek(0).obj;
@@ -775,9 +770,8 @@ case 18:
                         }
 break;
 case 19:
-//#line 147 "src/parser.y"
+//#line 146 "src/parser.y"
 {
-                        System.out.println("In method " + val_peek(10).sval + " args: " + (List<Var>)val_peek(8).obj);
                         yyval.obj = new Method(
                             val_peek(10).sval,
                             (Type)val_peek(11).obj,
@@ -789,15 +783,15 @@ case 19:
                     }
 break;
 case 20:
-//#line 159 "src/parser.y"
+//#line 157 "src/parser.y"
 { yyval.obj = new ArrayList<Var>(); }
 break;
 case 21:
-//#line 160 "src/parser.y"
+//#line 158 "src/parser.y"
 { yyval = val_peek(0); }
 break;
 case 22:
-//#line 163 "src/parser.y"
+//#line 161 "src/parser.y"
 {
                 List<Var> argsList = (List<Var>)val_peek(2).obj;
                 Var var = (Var)val_peek(0).obj;
@@ -808,7 +802,7 @@ case 22:
             }
 break;
 case 23:
-//#line 171 "src/parser.y"
+//#line 169 "src/parser.y"
 {
                 List<Var> argsList = new ArrayList<Var>();
                 Var var = (Var)val_peek(0).obj;
@@ -819,35 +813,35 @@ case 23:
             }
 break;
 case 24:
-//#line 181 "src/parser.y"
+//#line 179 "src/parser.y"
 { yyval.obj = new Var((Type)val_peek(1).obj, val_peek(0).sval); }
 break;
 case 25:
-//#line 183 "src/parser.y"
+//#line 181 "src/parser.y"
 { yyval.obj = new BlockStatement((List<Statement>)val_peek(1).obj); }
 break;
 case 26:
-//#line 184 "src/parser.y"
+//#line 182 "src/parser.y"
 { yyval.obj = new IfStatement((Expression)val_peek(4).obj, (Statement)val_peek(2).obj, (Statement)val_peek(0).obj); }
 break;
 case 27:
-//#line 185 "src/parser.y"
+//#line 183 "src/parser.y"
 { yyval.obj = new WhileStatement((Expression)val_peek(2).obj, (Statement)val_peek(0).obj); }
 break;
 case 28:
-//#line 186 "src/parser.y"
+//#line 184 "src/parser.y"
 { yyval.obj = new PrintStatement((Expression)val_peek(2).obj); }
 break;
 case 29:
-//#line 187 "src/parser.y"
+//#line 185 "src/parser.y"
 { yyval.obj = new AssignmentStatement(val_peek(3).sval, (Expression)val_peek(1).obj); }
 break;
 case 30:
-//#line 188 "src/parser.y"
+//#line 186 "src/parser.y"
 { yyval.obj = new ArrayAssignmentStatement(val_peek(6).sval, (Expression)val_peek(4).obj, (Expression)val_peek(1).obj); }
 break;
 case 31:
-//#line 191 "src/parser.y"
+//#line 189 "src/parser.y"
 {
                     List<Statement> statementList = (List<Statement>)val_peek(1).obj;
                     statementList.add((Statement)val_peek(0).obj);
@@ -855,7 +849,7 @@ case 31:
                 }
 break;
 case 32:
-//#line 196 "src/parser.y"
+//#line 194 "src/parser.y"
 {
                     List<Statement> statementList = new ArrayList<Statement>();
                     statementList.add((Statement)val_peek(0).obj);
@@ -863,87 +857,87 @@ case 32:
                 }
 break;
 case 33:
-//#line 203 "src/parser.y"
-{ System.out.println("hello"); yyval.obj = new ArrayList<Statement>(); }
+//#line 201 "src/parser.y"
+{ yyval.obj = new ArrayList<Statement>(); }
 break;
 case 34:
-//#line 204 "src/parser.y"
-{ System.out.println("hello2"); yyval = val_peek(0); }
+//#line 202 "src/parser.y"
+{ yyval = val_peek(0); }
 break;
 case 35:
-//#line 207 "src/parser.y"
+//#line 205 "src/parser.y"
 { yyval.obj = new BooleanExpression((Expression)val_peek(2).obj, "&&", (Expression)val_peek(0).obj); }
 break;
 case 36:
-//#line 208 "src/parser.y"
+//#line 206 "src/parser.y"
 { yyval.obj = new BooleanExpression((Expression)val_peek(2).obj, "<", (Expression)val_peek(0).obj); }
 break;
 case 37:
-//#line 209 "src/parser.y"
+//#line 207 "src/parser.y"
 { yyval.obj = new ArithmeticExpression((Expression)val_peek(2).obj, "+", (Expression)val_peek(0).obj); }
 break;
 case 38:
-//#line 210 "src/parser.y"
+//#line 208 "src/parser.y"
 { yyval.obj = new ArithmeticExpression((Expression)val_peek(2).obj, "-", (Expression)val_peek(0).obj); }
 break;
 case 39:
-//#line 211 "src/parser.y"
+//#line 209 "src/parser.y"
 { yyval.obj = new ArithmeticExpression((Expression)val_peek(2).obj, "*", (Expression)val_peek(0).obj); }
 break;
 case 40:
-//#line 212 "src/parser.y"
+//#line 210 "src/parser.y"
 { yyval.obj = new ArrayAccessExpression((Expression)val_peek(3).obj, (Expression)val_peek(1).obj); }
 break;
 case 41:
-//#line 213 "src/parser.y"
+//#line 211 "src/parser.y"
 { yyval.obj = new LengthExpression((Expression)val_peek(2).obj); }
 break;
 case 42:
-//#line 214 "src/parser.y"
+//#line 212 "src/parser.y"
 { yyval.obj = new MethodCallExpression((Expression)val_peek(5).obj, val_peek(3).sval, (List<Expression>)val_peek(1).obj); }
 break;
 case 43:
-//#line 215 "src/parser.y"
+//#line 213 "src/parser.y"
 { yyval.obj = new IntegerLiteralExpression((int)val_peek(0).ival); }
 break;
 case 44:
-//#line 216 "src/parser.y"
+//#line 214 "src/parser.y"
 { yyval.obj = new BooleanLiteralExpression(true); }
 break;
 case 45:
-//#line 217 "src/parser.y"
+//#line 215 "src/parser.y"
 { yyval.obj = new BooleanLiteralExpression(false); }
 break;
 case 46:
-//#line 218 "src/parser.y"
-{ System.out.println("Identifier expr production: " + val_peek(0).sval); yyval.obj = new IdentifierExpression(val_peek(0).sval); }
+//#line 216 "src/parser.y"
+{ yyval.obj = new IdentifierExpression(val_peek(0).sval); }
 break;
 case 47:
-//#line 219 "src/parser.y"
+//#line 217 "src/parser.y"
 { yyval.obj = new IdentifierExpression("this"); }
 break;
 case 48:
-//#line 220 "src/parser.y"
+//#line 218 "src/parser.y"
 { yyval.obj = new NewArrayExpression(Type.intType, (Expression)val_peek(1).obj); }
 break;
 case 49:
-//#line 221 "src/parser.y"
+//#line 219 "src/parser.y"
 { yyval.obj = new NewObjectExpression(val_peek(2).sval); }
 break;
 case 50:
-//#line 222 "src/parser.y"
+//#line 220 "src/parser.y"
 { yyval.obj = new UnaryExpression(val_peek(1).sval, (Expression)val_peek(0).obj); }
 break;
 case 51:
-//#line 223 "src/parser.y"
+//#line 221 "src/parser.y"
 { yyval = val_peek(1); }
 break;
 case 52:
-//#line 226 "src/parser.y"
+//#line 224 "src/parser.y"
 { yyval.obj = new ArrayList<Expression>(); }
 break;
 case 53:
-//#line 227 "src/parser.y"
+//#line 225 "src/parser.y"
 {
                     List<Expression> expressionList = new ArrayList<Expression>();
                     expressionList.add((Expression)val_peek(0).obj);
@@ -951,14 +945,14 @@ case 53:
                 }
 break;
 case 54:
-//#line 232 "src/parser.y"
+//#line 230 "src/parser.y"
 {
                     List<Expression> expressions = (List<Expression>)val_peek(2).obj;
                     expressions.add((Expression)val_peek(0).obj);
                     yyval.obj = expressions;
                 }
 break;
-//#line 885 "Parser.java"
+//#line 879 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
