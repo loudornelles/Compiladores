@@ -285,7 +285,7 @@ private int yylex() {
 /* método de manipulação de erros de sintaxe */
 public void yyerror (String error) {
     System.err.println("Erro: " + error + " na linha " + lexer.getLine());
-    System.err.println("Entrada rejeitada");
+    throw new Error("Entrada rejeitada");
 }
 
 <T> void putIfAbsentOrThrow(Map<String, T> map, String key, T value) {
